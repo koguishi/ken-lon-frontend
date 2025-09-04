@@ -6,7 +6,7 @@ import React from "react";
 import dayjs from "dayjs";
 
 interface Aluno {
-  id?: number;
+  id?: string; //UUID
   nome: string;
   cpf: string;
   dataNascimento?: string; // novo campo, formato ISO "YYYY-MM-DD"
@@ -22,9 +22,13 @@ export default function AlunoForm({ aluno, onSave, onCancel }: Props) {
   const [form, setForm] = useState<Aluno>({ nome: "", cpf: "" });
 
   useEffect(() => {
+    // Preenche o form quando há um aluno para edição
     if (aluno)
       setForm({
-        ...aluno,
+        // ...aluno,
+        id: aluno.id, // agora tratado como string UUID
+        nome: aluno.nome,
+        cpf: aluno.cpf,        
         dataNascimento: aluno.dataNascimento
           ? aluno.dataNascimento.split("T")[0] // mantém só a parte YYYY-MM-DD
           : "",
