@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import AlunoForm from "../components/AlunoForm";
 
 interface Aluno {
-  id?: number;
+  id?: string; //UUID
   nome: string;
   cpf: string;
   dataNascimento?: string;
