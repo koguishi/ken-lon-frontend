@@ -9,6 +9,7 @@ import AlunoFormPage from "./pages/AlunoFormPage";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
+import SelfRegister from "./pages/SelfRegister";
 
 export function App(): JSX.Element {
   const darkTheme = createTheme({
@@ -20,6 +21,7 @@ export function App(): JSX.Element {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/self-register" element={<SelfRegister />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             {/* <Route path="/mensalidades" element={<MensalidadeListPage />} /> */}

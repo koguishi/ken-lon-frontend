@@ -1,10 +1,22 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
+import {
+    Avatar,
+    Button,
+    TextField,
+    Link,
+    Box,
+    Typography,
+    Container,
+    Alert,
+} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export default function Login() {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -17,7 +29,7 @@ export default function Login() {
 
         try {
             const response = await axios.post(`${apiUrl}/auth/login`, {
-                email: username,
+                email,
                 password,
             });
             login(response.data.token);
@@ -28,38 +40,62 @@ export default function Login() {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-8 rounded-2xl shadow-md w-80"
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
             >
-                <h2 className="text-xl font-bold mb-6 text-center">Login</h2>
-                
+                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Entrar
+                </Typography>
+
                 {error && (
-                    <p className="text-red-500 text-sm mb-4">{error}</p>
+                    <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+                        {error}
+                    </Alert>
                 )}
 
-                <input
-                    type="text"
-                    placeholder="Usuário"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded-lg"
-                />
-                <input
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full mb-6 p-2 border rounded-lg"
-                />
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-                >
-                    Entrar
-                </button>
-            </form>
-        </div>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Usuário"
+                        autoFocus
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        type="password"
+                        label="Senha"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Entrar
+                    </Button>
+                    <Grid container>
+                        <Link component={RouterLink} to="/self-register" variant="body2">
+                            {"Não tem conta? Cadastre-se"}
+                        </Link>
+                    </Grid>
+                </Box>
+            </Box>
+        </Container>
     );
 }
