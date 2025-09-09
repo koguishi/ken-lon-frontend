@@ -1,6 +1,11 @@
 export interface Aluno {
-  id: number;
+  id: string;
   nome: string;
-  cpf: string;
+  cpf?: string;
   email?: string;
+}
+
+export interface Pessoa {
+  id?: string; //UUID
+  nome: string;
 }
