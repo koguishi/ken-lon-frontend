@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PessoaApi } from "../api/PessoaApi";
 import type { Pessoa } from "../types";
+import { ROUTES } from "../Routes";
 
 export default function PessoasList() {
   const { getAll, remove } = PessoaApi;  
@@ -41,12 +42,12 @@ export default function PessoasList() {
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5" gutterBottom>
-          Lista de Pessoas
+          Pessoas
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(`/pessoas/novo`)}
+          onClick={() => navigate(ROUTES.pessoaNovo)}
         >
           Novo
         </Button>
@@ -65,7 +66,7 @@ export default function PessoasList() {
                 <TableCell>{pessoa.nome}</TableCell>
                 <TableCell>
 
-                  <IconButton color="primary" onClick={() => navigate(`/pessoas/editar/${pessoa.id}`)}>
+                  <IconButton color="primary" onClick={() => navigate(`${ROUTES.pessoaDetalhe.build(pessoa.id!)}`)}>
                     <EditIcon />
                   </IconButton>
 

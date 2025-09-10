@@ -4,6 +4,7 @@ import type { Pessoa } from "../types";
 import PessoaForm from "../components/PessoaForm";
 import DashboardLayout from "../components/DashboardLayout";
 import { PessoaApi } from "../api/PessoaApi";
+import { ROUTES } from "../Routes";
 
 export default function PessoaFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,12 +22,12 @@ export default function PessoaFormPage() {
   }
 
   const handleSave = () => {
-    navigate("/pessoas"); // volta para listagem após salvar
+    navigate(ROUTES.pessoas); // volta para listagem após salvar
   };
 
   return(
     <DashboardLayout>
-      <PessoaForm pessoa={pessoa} onSave={handleSave} onCancel={() => navigate("/pessoas")} />
+      <PessoaForm pessoa={pessoa} onSave={handleSave} onCancel={() => navigate(ROUTES.pessoas)} />
     </DashboardLayout>
   );
 }
