@@ -29,7 +29,7 @@ interface Props {
 }
 
 export default function DashboardLayout({ children }: Props) {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -65,8 +65,13 @@ export default function DashboardLayout({ children }: Props) {
                 <MenuIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                Meu Painel
+                Controle de Contas
             </Typography>
+            {user && (
+                <Typography variant="body1">
+                    {user.email}
+                </Typography>
+            )}            
             <Button
                 color="inherit"
                 startIcon={<LogoutIcon />}
