@@ -8,45 +8,31 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PessoaApi } from "../api/PessoaApi";
-
-interface Pessoa {
-  id: number;
-  nome: string;
-}
+import type { Pessoa } from "../types";
 
 export default function PessoasList() {
-  const { getAll } = PessoaApi;  
+  const { getAll, remove } = PessoaApi;  
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const rowsPerPage = 5;
 
-  useEffect(() => {
+  const fetchAlunos = () => {
     getAll(page, rowsPerPage).then((res) => {
       setPessoas(res.data.pessoas);
       setTotal(res.data.totalItems);
     });
+  }
+
+  useEffect(() => {
+    fetchAlunos();
   }, [page, rowsPerPage]); 
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-
-  // const fetchPessoas = () => {
-  //   fetch(`${apiUrl}/pessoas?page=${page + 1}&pageSize=${rowsPerPage}`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       setPessoas(data.pessoas ?? []);
-  //       setTotal(data.totalItems ?? 0);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchPessoas();
-  // }, [page]);
-
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Deseja realmente excluir esta pessoa?")) return;
-    await fetch(`${apiUrl}/pessoas/${id}`, { method: "DELETE" });
-    getAll();
+
+    await remove(id);
+    fetchAlunos();
   };
 
   const navigate = useNavigate();
@@ -60,7 +46,7 @@ export default function PessoasList() {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(`/novo`)}
+          onClick={() => navigate(`/pessoas/novo`)}
         >
           Novo
         </Button>
@@ -79,11 +65,11 @@ export default function PessoasList() {
                 <TableCell>{pessoa.nome}</TableCell>
                 <TableCell>
 
-                  <IconButton color="primary" onClick={() => navigate(`/editar/${pessoa.id}`)}>
+                  <IconButton color="primary" onClick={() => navigate(`/pessoas/editar/${pessoa.id}`)}>
                     <EditIcon />
                   </IconButton>
 
-                  <IconButton onClick={() => handleDelete(pessoa.id)} color="error">
+                  <IconButton onClick={() => handleDelete(pessoa.id!)} color="error">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>

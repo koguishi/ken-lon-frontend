@@ -3,30 +3,30 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { Pessoa } from "../types";
 import PessoaForm from "../components/PessoaForm";
 import DashboardLayout from "../components/DashboardLayout";
+import { PessoaApi } from "../api/PessoaApi";
 
 export default function PessoaFormPage() {
   const { id } = useParams<{ id: string }>();
   const [pessoa, setPessoa] = useState<Pessoa | undefined>(undefined);
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    if (id) {
-      fetch(`${apiUrl}/pessoas/${id}`)
-        .then(res => res.json())
-        .then(data => setPessoa({
-          ...data,
-        }));
-    }
-  }, [id]);
+  const { getById } = PessoaApi;
+
+  if (id) {
+    useEffect(() => {
+      getById(id!).then((res) => {
+        setPessoa(res.data);
+      }).catch(err => console.error(err));
+    }, [id]);
+  }
 
   const handleSave = () => {
-    navigate("/"); // volta para listagem após salvar
+    navigate("/pessoas"); // volta para listagem após salvar
   };
 
   return(
     <DashboardLayout>
-      <PessoaForm pessoa={pessoa} onSave={handleSave} onCancel={() => navigate("/")} />
+      <PessoaForm pessoa={pessoa} onSave={handleSave} onCancel={() => navigate("/pessoas")} />
     </DashboardLayout>
   );
 }

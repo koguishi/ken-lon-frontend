@@ -15,11 +15,12 @@ export default function PessoaForm({ pessoa: pessoa, onSave, onCancel }: Props) 
 
   useEffect(() => {
     // Preenche o form quando há registro para edição
-    if (pessoa)
+    if (pessoa) {
       setForm({
         id: pessoa.id, // agora tratado como string UUID
         nome: pessoa.nome,
       });
+    }
   }, [pessoa]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +31,11 @@ export default function PessoaForm({ pessoa: pessoa, onSave, onCancel }: Props) 
     e.preventDefault();
 
     try {
-      useEffect(() => {
-        pessoa
-          ? update(pessoa.id!, JSON.stringify(form))
-          : create(JSON.stringify(form))
-      });
+      if (pessoa)
+        await update(pessoa.id!, form);
+      else
+        await create({ ... form });
+
       onSave();
       setForm({ nome: "" });
     } catch (err) {

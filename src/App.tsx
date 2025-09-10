@@ -27,7 +27,7 @@ export function App(): JSX.Element {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/pessoas" element={<PessoasListPage />} />
               <Route path="/pessoas/novo" element={<PessoaFormPage />} />
-              <Route path="pessoas/editar/:id" element={<PessoaFormPage />} />
+              <Route path="/pessoas/editar/:id" element={<PessoaFormPage />} />
               {/* <Route path="/mensalidades" element={<MensalidadeListPage />} /> */}
             </Route>        
             {/* <Route path="/" element={<AlunoListPage />} />
