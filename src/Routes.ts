@@ -7,7 +7,10 @@ export const ROUTES = {
     },
     categorias: "/categorias",
     categoriaNovo: "/categorias/novo",
-    categoriaEditar: (id: string) => `/categorias/editar/${id}`,
+    categoriaDetalhe: {
+        path: "/categorias/:id",                   // usado no <Route />
+        build: (id: string) => `/categorias/${id}` // usado no navigate()
+    },
     login: "/login",
     selfRegister: "/self-register",
     dashboard: "/dashboard",

@@ -9,3 +9,14 @@ export interface Pessoa {
   id?: string; //UUID
   nome: string;
 }
+
+export interface SubCategoria {
+  id?: string;
+  nome: string;
+}
+
+export interface Categoria {
+  id?: string;
+  nome: string;
+  subcategorias?: SubCategoria[];  
+}
