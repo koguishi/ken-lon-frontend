@@ -18,5 +18,5 @@ export interface SubCategoria {
 export interface Categoria {
   id?: string;
   nome: string;
-  subcategorias?: SubCategoria[];  
+  subCategorias?: SubCategoria[];  
 }
