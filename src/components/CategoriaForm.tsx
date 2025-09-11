@@ -11,7 +11,7 @@ interface Props {
 
 export default function CategoriaForm({ categoria: categoria, onSave, onCancel }: Props) {
   const { create, update } = CategoriaApi;
-  const [form, setForm] = useState<Categoria>({ nome: "", subcategorias: [] });
+  const [form, setForm] = useState<Categoria>({ nome: "", subCategorias: [] });
 
   useEffect(() => {
     // Preenche o form quando há registro para edição
@@ -19,7 +19,7 @@ export default function CategoriaForm({ categoria: categoria, onSave, onCancel }
       setForm({
         id: categoria.id, // agora tratado como string UUID
         nome: categoria.nome,
-        subcategorias: categoria.subcategorias || [],
+        subCategorias: categoria.subCategorias || [],
       });
     }
   }, [categoria]);
@@ -29,19 +29,19 @@ export default function CategoriaForm({ categoria: categoria, onSave, onCancel }
   };
 
   const handleSubChange = (index: number, value: string) => {
-    const updated = [...(form.subcategorias || [])];
+    const updated = [...(form.subCategorias || [])];
     updated[index].nome = value;
-    setForm({ ...form, subcategorias: updated });
+    setForm({ ...form, subCategorias: updated });
   };
 
   const addSubcategoria = () => {
-    setForm({ ...form, subcategorias: [...(form.subcategorias || []), { nome: "" }] });
+    setForm({ ...form, subCategorias: [...(form.subCategorias || []), { nome: "" }] });
   };
 
   const removeSubcategoria = (index: number) => {
     setForm({
       ...form,
-      subcategorias: (form.subcategorias ?? []).filter((_, i) => i !== index),
+      subCategorias: (form.subCategorias ?? []).filter((_, i) => i !== index),
     });
   };  
 
@@ -86,7 +86,7 @@ export default function CategoriaForm({ categoria: categoria, onSave, onCancel }
 
       <div>
         <label className="block font-medium">Subcategorias</label>
-        {(form.subcategorias ?? []).map((sub, i) => (
+        {(form.subCategorias ?? []).map((sub, i) => (
           <div key={i} className="flex gap-2 mb-2">
             <input
               type="text"
