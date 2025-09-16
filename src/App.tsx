@@ -12,6 +12,8 @@ import PessoasListPage from "./pages/PessoasListPage";
 import PessoaFormPage from "./pages/PessoaFormPage";
 import CategoriasListPage from "./pages/CategoriasListPage";
 import CategoriaFormPage from "./pages/CategoriaFormPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function App(): JSX.Element {
   return (
@@ -34,6 +36,7 @@ export function App(): JSX.Element {
           </Routes>
         </Router>
       </AuthProvider>
+      <ToastContainer position="top-right" autoClose={4000} />
     </ThemeProvider>
   );
 }
