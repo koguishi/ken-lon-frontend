@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { PessoaApi } from "../api/PessoaApi";
 import type { Pessoa } from "../types";
 import { ROUTES } from "../Routes";
+import { useApiError } from "../api/useApiError";
+import { useConfirm } from "../useConfirm";
+import { toast } from "react-toastify";
 
 export default function PessoasList() {
   const { getAll, remove } = PessoaApi;  
@@ -27,13 +30,23 @@ export default function PessoasList() {
 
   useEffect(() => {
     fetchAlunos();
-  }, [page, rowsPerPage]); 
+  }, [page, rowsPerPage]);
+
+  const { confirm } = useConfirm();  
+  const { handleApiError } = useApiError();
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Deseja realmente excluir esta pessoa?")) return;
+    const ok = await confirm("Deseja realmente excluir esta pessoa?");
+    if (!ok) return;    
 
-    await remove(id);
-    fetchAlunos();
+    try {
+      await remove(id);
+      toast.success("Aluno excluído com sucesso!");
+      // atualizar a lista
+      fetchAlunos();
+    } catch (err) {
+      handleApiError(err, "excluir aluno");
+    }    
   };
 
   const navigate = useNavigate();
