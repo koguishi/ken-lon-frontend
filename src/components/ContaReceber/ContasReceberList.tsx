@@ -13,6 +13,7 @@ import { ROUTES } from "../../Routes";
 import { useApiError } from "../../api/useApiError";
 import { useConfirm } from "../../useConfirm";
 import { toast } from "react-toastify";
+import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 
 export default function ContasReceberList() {
   const { getAll, remove } = ContaReceberApi;  
@@ -20,6 +21,13 @@ export default function ContasReceberList() {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const rowsPerPage = 5;
+
+  const abrirNovo = () => navigate(ROUTES.contaReceberNovo);
+  useKeyboardShortcuts({
+    "Alt+N": abrirNovo,
+    // "Alt+E": editarSelecionado,
+    // "Alt+D": deletarSelecionado,
+  });  
 
   const fetchContasReceber = () => {
     getAll(page, rowsPerPage).then((res) => {
