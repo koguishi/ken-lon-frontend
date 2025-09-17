@@ -25,5 +25,5 @@ export interface ContaReceber {
   id?: string;
   descricao?: string;
   valor: number;
-  vencimento: Date;
+  vencimento: string;
 }
