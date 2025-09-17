@@ -20,3 +20,10 @@ export interface Categoria {
   nome: string;
   subCategorias?: SubCategoria[];  
 }
+
+export interface ContaReceber {
+  id?: string;
+  descricao?: string;
+  valor: number;
+  vencimento: Date;
+}
