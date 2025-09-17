@@ -88,7 +88,9 @@ export default function ContasReceberList() {
               <TableRow key={conta.id}>
                 <TableCell>{conta.descricao}</TableCell>
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
-                <TableCell>R$ {conta.valor}</TableCell>
+                <TableCell>
+                  R$ {conta.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </TableCell>
 
                 <TableCell>
 
