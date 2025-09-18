@@ -7,6 +7,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { CategoriaApi } from "../../api/CategoriaApi";
+import PessoaAutocomplete from "../PessoaAutoComplete";
 
 interface Props {
   contaReceber?: ContaReceber;
@@ -107,6 +108,11 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
           Conta a Receber
         </Typography>
       </Box>
+
+      <PessoaAutocomplete
+        idInicial={contaReceber?.pessoaId}
+        onChange={(pessoa) => setForm({ ...form, pessoaId: pessoa?.id ?? undefined })}
+      />
 
       <FormControl fullWidth margin="dense">
         <InputLabel>Categoria</InputLabel>
