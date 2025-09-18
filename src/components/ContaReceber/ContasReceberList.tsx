@@ -11,7 +11,7 @@ import { ContaReceberApi } from "../../api/ContaReceberApi";
 import type { ContaReceber } from "../../types";
 import { ROUTES } from "../../Routes";
 import { useApiError } from "../../api/useApiError";
-import { useConfirm } from "../../useConfirm";
+import { useConfirm } from "../../hooks/useConfirm";
 import { toast } from "react-toastify";
 import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 
