@@ -58,11 +58,11 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         subCategoriaId: contaReceber.subCategoriaId,
         pessoaId: contaReceber.pessoaId,
       });
-      if (form.categoriaId)
+      if (contaReceber.categoriaId)
       {
-        setCategoriaId(form.categoriaId);
+        setCategoriaId(contaReceber.categoriaId);
         carregarSubCategorias();
-        setSubCategoriaId(form.subCategoriaId!);
+        setSubCategoriaId(contaReceber.subCategoriaId!);
       }
     }
   }, [contaReceber]);
