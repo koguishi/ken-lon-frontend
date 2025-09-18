@@ -26,4 +26,7 @@ export interface ContaReceber {
   descricao?: string;
   valor: number;
   vencimento: string;
+  categoriaId?: string,
+  subCategoriaId?: string,
+  pessoaId?: string,
 }
