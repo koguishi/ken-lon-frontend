@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import type { ContaReceber } from "../types";
-import ContaReceberForm from "../components/ContaReceber/ContasReceberForm";
-import DashboardLayout from "../components/DashboardLayout";
-import { ContaReceberApi } from "../api/ContaReceberApi";
-import { ROUTES } from "../Routes";
+import type { ContaReceber } from "../../types";
+import ContaReceberForm from "../../components/ContaReceber/ContasReceberForm";
+import DashboardLayout from "../../components/DashboardLayout";
+import { ContaReceberApi } from "../../api/ContaReceberApi";
+import { ROUTES } from "../../Routes";
 
 export default function ContaReceberFormPage() {
   const { id } = useParams<{ id: string }>();
