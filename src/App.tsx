@@ -14,8 +14,9 @@ import CategoriasListPage from "./pages/CategoriasListPage";
 import CategoriaFormPage from "./pages/CategoriaFormPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ContasReceberListPage from "./pages/ContasReceberListPage";
-import ContaReceberFormPage from "./pages/ContaReceberFormPage";
+import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
+import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
+import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
 
 export function App(): JSX.Element {
   return (
@@ -37,6 +38,7 @@ export function App(): JSX.Element {
               <Route path={ROUTES.contasReceber} element={<ContasReceberListPage />} />
               <Route path={ROUTES.contaReceberNovo} element={<ContaReceberFormPage />} />
               <Route path={ROUTES.contaReceberDetalhe.path} element={<ContaReceberFormPage />} />
+              <Route path={ROUTES.registrarRecebimento.path} element={<RegistrarRecebimentoPage />} />
             </Route>
           </Routes>
         </Router>
