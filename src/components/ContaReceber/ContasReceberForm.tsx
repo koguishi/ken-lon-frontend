@@ -68,12 +68,12 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
   const handleCategoriaChange = (e: SelectChangeEvent) => {
     setCategoriaId(e.target.value);
-    setForm({ ...form, categoriaId: e.target.value });
+    setForm({ ...form, categoriaId: e.target.value == "" ? undefined : e.target.value });
   };
 
   const handleSubCategoriaChange = (e: SelectChangeEvent) => {
     setSubCategoriaId(e.target.value);
-    setForm({ ...form, subCategoriaId: e.target.value });
+    setForm({ ...form, subCategoriaId: e.target.value == "" ? undefined : e.target.value });
   };  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +111,11 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
       <FormControl fullWidth margin="dense">
         <InputLabel>Categoria</InputLabel>
         <Select value={categoriaId} label="Categoria" onChange={handleCategoriaChange}>
+
+          <MenuItem value={""}>
+            <em>Nenhuma categoria</em>
+          </MenuItem>
+
           {categorias.map((c) => (
             <MenuItem key={c.id} value={c.id}>
               {c.nome}
@@ -121,11 +126,12 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
       <FormControl fullWidth margin="dense" disabled={!form.categoriaId}>
         <InputLabel>Subcategoria</InputLabel>
-        <Select
-          value={subCategoriaId}
-          label="Subcategoria"
-          onChange={handleSubCategoriaChange}
-        >
+        <Select value={subCategoriaId} label="Subcategoria" onChange={handleSubCategoriaChange}>
+
+          <MenuItem value={""}>
+            <em>Nenhuma subcategoria</em>
+          </MenuItem>
+
           {subcategorias.map((s) => (
             <MenuItem key={s.id} value={s.id}>
               {s.nome}
