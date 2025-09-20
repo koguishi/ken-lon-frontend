@@ -20,7 +20,7 @@ export default function PessoasList() {
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
 
   const abrirNovo = () => navigate(ROUTES.categoriaNovo);
   useKeyboardShortcuts({
@@ -60,8 +60,8 @@ export default function PessoasList() {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <Container maxWidth="md" sx={{ mt: 0 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={0}>
         <Typography variant="h5" gutterBottom>
           Pessoas
         </Typography>
@@ -74,7 +74,7 @@ export default function PessoasList() {
         </Button>
       </Box>
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
-        <Table stickyHeader>
+        <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
               <TableCell>Nome</TableCell>
