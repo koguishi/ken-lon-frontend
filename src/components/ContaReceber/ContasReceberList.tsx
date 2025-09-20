@@ -14,6 +14,7 @@ import { useApiError } from "../../api/useApiError";
 import { useConfirm } from "../../hooks/useConfirm";
 import { toast } from "react-toastify";
 import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
+import { AttachMoney } from "@mui/icons-material";
 
 export default function ContasReceberList() {
   const { getAll, remove } = ContaReceberApi;  
@@ -93,6 +94,9 @@ export default function ContasReceberList() {
                 </TableCell>
 
                 <TableCell>
+                  <IconButton color="primary" onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}>
+                    <AttachMoney />
+                  </IconButton>
 
                   <IconButton color="primary" onClick={() => navigate(`${ROUTES.contaReceberDetalhe.build(conta.id!)}`)}>
                     <EditIcon />

@@ -12,4 +12,6 @@ export const ContaReceberApi = {
     create: (data: any) => api.post(url, data),
     update: (id: string, data: any) => api.put(`${url}/${id}`, data),
     remove: (id: string) => api.delete(`${url}/${id}`),
+    registrarRecebimento: (id: string, data: any) => api.patch(`${url}/registrar-recebimento/${id}`, data),
+    EstornarRecebimento: (id: string, data: any) => api.patch(`${url}/estornar-recebimento/${id}`, data),
 };

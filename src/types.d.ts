@@ -29,4 +29,13 @@ export interface ContaReceber {
   categoriaId?: string,
   subCategoriaId?: string,
   pessoaId?: string,
+  categoriaNome?: string,
+  subCategoriaNome?: string,
+  pessoaNome?: string,
+}
+
+export interface RegistrarRecebimento {
+  dataRecebimento: string;
+  meioRecebimento: string;
+  obsRecebimento: string;
 }
