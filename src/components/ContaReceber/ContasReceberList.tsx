@@ -122,6 +122,7 @@ export default function ContasReceberList() {
               <TableCell>Nome</TableCell>
               <TableCell>Vencimento</TableCell>
               <TableCell>Valor</TableCell>
+              <TableCell>Recebimento</TableCell>
               <TableCell>Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -132,6 +133,12 @@ export default function ContasReceberList() {
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
                 <TableCell>
                   R$ {conta.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </TableCell>
+                <TableCell>
+                  {conta.dataRecebimento 
+                    ? new Date(conta.dataRecebimento).toLocaleDateString()
+                    : ""
+                  }
                 </TableCell>
 
                 <TableCell>
