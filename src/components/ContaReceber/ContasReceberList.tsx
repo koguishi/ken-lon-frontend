@@ -49,6 +49,16 @@ export default function ContasReceberList() {
   const { confirm } = useConfirm();  
   const { handleApiError } = useApiError();
 
+  const handleRecebimento = async (id: string, recebido: boolean) => {
+    try {
+      recebido 
+        ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)
+        : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
+    } catch (err) {
+      handleApiError(err, "excluir conta a receber");
+    }    
+  };
+
   const handleDelete = async (id: string) => {
     const ok = await confirm("Deseja realmente excluir esta conta?");
     if (!ok) return;    
@@ -60,7 +70,7 @@ export default function ContasReceberList() {
       fetchContasReceber();
     } catch (err) {
       handleApiError(err, "excluir conta a receber");
-    }    
+    }
   };
 
   const navigate = useNavigate();
@@ -146,7 +156,7 @@ export default function ContasReceberList() {
                   <Tooltip title={conta.recebido ? "Estornar recebimento" : "Registrar recebimento"}>
                     <IconButton
                       color={conta.recebido ? "error" : "primary"}
-                      onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}
+                      onClick={() => handleRecebimento(conta.id!, conta.recebido)}
                     >
                       <AttachMoney />
                     </IconButton>

@@ -21,6 +21,10 @@ export const ROUTES = {
         path: "/registrar-recebimento/:id",
         build: (id: string) => `/registrar-recebimento/${id}`
     },
+    estornarRecebimento: {
+        path: "/estornar-recebimento/:id",
+        build: (id: string) => `/estornar-recebimento/${id}`
+    },
     login: "/login",
     selfRegister: "/self-register",
     dashboard: "/dashboard",

@@ -33,6 +33,7 @@ export interface ContaReceber {
 
   recebido: boolean;
   dataRecebimento: string;
+  meioRecebimento: string;
   obsRecebimento: string;
   
   categoriaId?: string,
@@ -47,4 +48,8 @@ export interface RegistrarRecebimento {
   dataRecebimento: string;
   meioRecebimento: string;
   obsRecebimento: string;
+}
+
+export interface EstornarRecebimento {
+  observacao: string;
 }
