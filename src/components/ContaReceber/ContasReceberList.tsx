@@ -33,7 +33,7 @@ export default function ContasReceberList() {
     "Alt+N": abrirNovo,
     // "Alt+E": editarSelecionado,
     // "Alt+D": deletarSelecionado,
-  });  
+  });
 
   const fetchContasReceber = () => {
     getAll(page + 1, rowsPerPage).then((res) => {
@@ -106,7 +106,7 @@ export default function ContasReceberList() {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(ROUTES.contaReceberNovo)}
+          onClick={ abrirNovo }
         >
           Novo
         </Button>

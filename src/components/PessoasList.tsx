@@ -13,6 +13,7 @@ import { ROUTES } from "../Routes";
 import { useApiError } from "../api/useApiError";
 import { useConfirm } from "../hooks/useConfirm";
 import { toast } from "react-toastify";
+import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 
 export default function PessoasList() {
   const { getAll, remove } = PessoaApi;  
@@ -20,6 +21,13 @@ export default function PessoasList() {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const rowsPerPage = 5;
+
+  const abrirNovo = () => navigate(ROUTES.categoriaNovo);
+  useKeyboardShortcuts({
+    "Alt+N": abrirNovo,
+    // "Alt+E": editarSelecionado,
+    // "Alt+D": deletarSelecionado,
+  });
 
   const fetchAlunos = () => {
     getAll(page + 1, rowsPerPage).then((res) => {

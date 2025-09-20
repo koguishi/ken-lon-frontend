@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ROUTES } from "../Routes";
+import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 
 export default function CategoriasList() {
   const { getAll, remove } = CategoriaApi;
@@ -15,6 +16,13 @@ export default function CategoriasList() {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const rowsPerPage = 5;
+
+  const abrirNovo = () => navigate(ROUTES.categoriaNovo);
+  useKeyboardShortcuts({
+    "Alt+N": abrirNovo,
+    // "Alt+E": editarSelecionado,
+    // "Alt+D": deletarSelecionado,
+  });
 
   const fetch = () => {
     getAll(page + 1, rowsPerPage).then((res) => {
@@ -45,7 +53,7 @@ export default function CategoriasList() {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(ROUTES.categoriaNovo)}
+          onClick={ abrirNovo }
         >
           Novo
         </Button>
