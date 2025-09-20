@@ -19,6 +19,8 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
   const { create: createConta, update: updateConta } = ContaReceberApi;
   const { getAll: getCategorias } = CategoriaApi;
   const [form, setForm] = useState<ContaReceber>({ valor: 0, vencimento: "", descricao: ""
+    , excluido: false, dataExclusao: "", motivoExclusao: ""
+    , recebido: false, dataRecebimento: "", meioRecebimento: "", obsRecebimento: ""
     , categoriaId: undefined, subCategoriaId: undefined, pessoaId: undefined});
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaId, setCategoriaId] = useState("");
@@ -57,6 +59,13 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         categoriaId: contaReceber.categoriaId,
         subCategoriaId: contaReceber.subCategoriaId,
         pessoaId: contaReceber.pessoaId,
+        excluido: contaReceber.excluido,
+        dataExclusao: contaReceber.dataExclusao,
+        motivoExclusao: contaReceber.motivoExclusao,
+        recebido: contaReceber.recebido,
+        dataRecebimento: contaReceber.dataRecebimento,
+        meioRecebimento: contaReceber.meioRecebimento,
+        obsRecebimento: contaReceber.obsRecebimento
       });
       if (contaReceber.categoriaId)
       {
@@ -91,7 +100,11 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         await createConta({ ... form });
 
       onSave();
-      setForm({ valor: 0, vencimento: "", descricao: "", categoriaId: "", subCategoriaId: "", pessoaId: "" });
+      setForm({ valor: 0, vencimento: "", descricao: ""
+        , excluido: false, dataExclusao: "", motivoExclusao: ""
+        , recebido: false, dataRecebimento: "", meioRecebimento: "", obsRecebimento: ""
+        , categoriaId: "", subCategoriaId: "", pessoaId: "" 
+      });
     } catch (err) {
       console.error("Erro ao salvar conta a receber:", err);
     }
