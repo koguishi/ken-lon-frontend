@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
 import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
 import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
-import MensalidadesPage01 from "./pages/MensalidadesPage01";
+// import MensalidadesPage01 from "./pages/MensalidadesPage01";
 import EstornarRecebimentoPage from "./pages/ContaReceber/EstornarRecebimentoPage";
 
 export function App(): JSX.Element {
