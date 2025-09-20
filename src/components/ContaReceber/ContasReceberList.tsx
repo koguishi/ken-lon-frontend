@@ -36,7 +36,7 @@ export default function ContasReceberList() {
   });  
 
   const fetchContasReceber = () => {
-    getAll(page, rowsPerPage).then((res) => {
+    getAll(page + 1, rowsPerPage).then((res) => {
       setContas(res.data.contas);
       setTotal(res.data.totalItems);
     });

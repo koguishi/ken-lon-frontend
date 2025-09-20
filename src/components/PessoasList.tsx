@@ -22,7 +22,7 @@ export default function PessoasList() {
   const rowsPerPage = 5;
 
   const fetchAlunos = () => {
-    getAll(page, rowsPerPage).then((res) => {
+    getAll(page + 1, rowsPerPage).then((res) => {
       setPessoas(res.data.pessoas);
       setTotal(res.data.totalItems);
     });

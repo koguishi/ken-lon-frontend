@@ -17,7 +17,7 @@ export default function CategoriasList() {
   const rowsPerPage = 5;
 
   const fetch = () => {
-    getAll(page, rowsPerPage).then((res) => {
+    getAll(page + 1, rowsPerPage).then((res) => {
       setCategorias(res.data.categorias);
       setTotal(res.data.totalItems);
     });
