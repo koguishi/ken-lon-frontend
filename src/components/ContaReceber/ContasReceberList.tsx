@@ -49,7 +49,7 @@ export default function ContasReceberList() {
   const { confirm } = useConfirm();  
   const { handleApiError } = useApiError();
 
-  const handleRecebimento = async (id: string, recebido: boolean) => {
+  const handleRecebimento = async (id: string, recebido?: boolean) => {
     try {
       recebido 
         ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)

@@ -19,8 +19,8 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
   const { create: createConta, update: updateConta } = ContaReceberApi;
   const { getAll: getCategorias } = CategoriaApi;
   const [form, setForm] = useState<ContaReceber>({ valor: 0, vencimento: "", descricao: ""
-    , excluido: false, dataExclusao: "", motivoExclusao: ""
-    , recebido: false, dataRecebimento: "", meioRecebimento: "", obsRecebimento: ""
+    , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
+    , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
     , categoriaId: undefined, subCategoriaId: undefined, pessoaId: undefined});
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaId, setCategoriaId] = useState("");
@@ -101,8 +101,8 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
       onSave();
       setForm({ valor: 0, vencimento: "", descricao: ""
-        , excluido: false, dataExclusao: "", motivoExclusao: ""
-        , recebido: false, dataRecebimento: "", meioRecebimento: "", obsRecebimento: ""
+        , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
+        , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
         , categoriaId: "", subCategoriaId: "", pessoaId: "" 
       });
     } catch (err) {
