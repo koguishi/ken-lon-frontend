@@ -17,6 +17,7 @@ export function useConfirm() {
       cancelButtonText: "Cancelar",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
+      focusCancel: true,
     });
 
     return result.isConfirmed;
