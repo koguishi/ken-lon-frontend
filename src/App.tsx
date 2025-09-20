@@ -14,8 +14,11 @@ import CategoriasListPage from "./pages/CategoriasListPage";
 import CategoriaFormPage from "./pages/CategoriaFormPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ContasReceberListPage from "./pages/ContasReceberListPage";
-import ContaReceberFormPage from "./pages/ContaReceberFormPage";
+import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
+import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
+import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
+// import MensalidadesPage01 from "./pages/MensalidadesPage01";
+import EstornarRecebimentoPage from "./pages/ContaReceber/EstornarRecebimentoPage";
 
 export function App(): JSX.Element {
   return (
@@ -23,6 +26,7 @@ export function App(): JSX.Element {
       <AuthProvider>
         <Router>
           <Routes>
+            {/* <Route path="teste" element={<MensalidadesPage01/>} /> */}
             <Route path={ROUTES.login} element={<Login />} />
             <Route path={ROUTES.selfRegister} element={<SelfRegister />} />
             <Route element={<PrivateRoute />}>
@@ -37,6 +41,8 @@ export function App(): JSX.Element {
               <Route path={ROUTES.contasReceber} element={<ContasReceberListPage />} />
               <Route path={ROUTES.contaReceberNovo} element={<ContaReceberFormPage />} />
               <Route path={ROUTES.contaReceberDetalhe.path} element={<ContaReceberFormPage />} />
+              <Route path={ROUTES.registrarRecebimento.path} element={<RegistrarRecebimentoPage />} />
+              <Route path={ROUTES.estornarRecebimento.path} element={<EstornarRecebimentoPage />} />
             </Route>
           </Routes>
         </Router>

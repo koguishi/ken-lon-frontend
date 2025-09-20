@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import type { ContaReceber } from "../types";
-import ContaReceberForm from "../components/ContaReceber/ContasReceberForm";
-import DashboardLayout from "../components/DashboardLayout";
-import { ContaReceberApi } from "../api/ContaReceberApi";
-import { ROUTES } from "../Routes";
+import type { ContaReceber } from "../../types";
+import DashboardLayout from "../../components/DashboardLayout";
+import { ContaReceberApi } from "../../api/ContaReceberApi";
+import { ROUTES } from "../../Routes";
+import RegistrarRecebimento from "../../components/ContaReceber/RegistrarRecebimento";
 
-export default function ContaReceberFormPage() {
+export default function RegistrarRecebimentoPage() {
   const { id } = useParams<{ id: string }>();
   const [contaReceber, setContaReceber] = useState<ContaReceber | undefined>(undefined);
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function ContaReceberFormPage() {
 
   return(
     <DashboardLayout>
-      <ContaReceberForm contaReceber={contaReceber} onSave={handleSave} onCancel={() => navigate(ROUTES.contasReceber)} />
+      <RegistrarRecebimento contaReceber={contaReceber} onSave={handleSave} onCancel={() => navigate(ROUTES.contasReceber)} />
     </DashboardLayout>
   );
 }

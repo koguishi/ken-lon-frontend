@@ -11,7 +11,7 @@ import { PessoaApi } from "../api/PessoaApi";
 import type { Pessoa } from "../types";
 import { ROUTES } from "../Routes";
 import { useApiError } from "../api/useApiError";
-import { useConfirm } from "../useConfirm";
+import { useConfirm } from "../hooks/useConfirm";
 import { toast } from "react-toastify";
 
 export default function PessoasList() {

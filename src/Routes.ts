@@ -8,14 +8,22 @@ export const ROUTES = {
     categorias: "/categorias",
     categoriaNovo: "/categorias/novo",
     categoriaDetalhe: {
-        path: "/categorias/:id",                   // usado no <Route />
-        build: (id: string) => `/categorias/${id}` // usado no navigate()
+        path: "/categorias/:id",
+        build: (id: string) => `/categorias/${id}`
     },
     contasReceber: "/contas-receber",
     contaReceberNovo: "/conta-receber/novo",
     contaReceberDetalhe: {
-        path: "/conta-receber/:id",                   // usado no <Route />
-        build: (id: string) => `/conta-receber/${id}` // usado no navigate()
+        path: "/conta-receber/:id",
+        build: (id: string) => `/conta-receber/${id}`
+    },
+    registrarRecebimento: {
+        path: "/registrar-recebimento/:id",
+        build: (id: string) => `/registrar-recebimento/${id}`
+    },
+    estornarRecebimento: {
+        path: "/estornar-recebimento/:id",
+        build: (id: string) => `/estornar-recebimento/${id}`
     },
     login: "/login",
     selfRegister: "/self-register",
