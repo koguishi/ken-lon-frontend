@@ -154,6 +154,7 @@ export default function ContasReceberList() {
 
                   <Tooltip title="Alterar dados da conta">
                     <IconButton
+                      disabled={conta.recebido === true}
                       color="primary"
                       onClick={() => navigate(`${ROUTES.contaReceberDetalhe.build(conta.id!)}`)}
                     >
