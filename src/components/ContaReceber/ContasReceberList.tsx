@@ -4,7 +4,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Tooltip
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -142,20 +143,30 @@ export default function ContasReceberList() {
                 </TableCell>
 
                 <TableCell>
-                  <IconButton
-                    color={conta.recebido ? "error" : "primary"}
-                    onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}
-                  >
-                    <AttachMoney />
-                  </IconButton>
+                  <Tooltip title={conta.recebido ? "Estornar recebimento" : "Registrar recebimento"}>
+                    <IconButton
+                      color={conta.recebido ? "error" : "primary"}
+                      onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}
+                    >
+                      <AttachMoney />
+                    </IconButton>
+                  </Tooltip>
 
-                  <IconButton color="primary" onClick={() => navigate(`${ROUTES.contaReceberDetalhe.build(conta.id!)}`)}>
-                    <EditIcon />
-                  </IconButton>
+                  <Tooltip title="Alterar dados da conta">
+                    <IconButton
+                      color="primary"
+                      onClick={() => navigate(`${ROUTES.contaReceberDetalhe.build(conta.id!)}`)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
 
-                  <IconButton onClick={() => handleDelete(conta.id!)} color="error">
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="Excluir conta">
+                    <IconButton onClick={() => handleDelete(conta.id!)} color="error">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+
                 </TableCell>
               </TableRow>
             ))}
