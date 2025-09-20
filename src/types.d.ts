@@ -26,6 +26,15 @@ export interface ContaReceber {
   descricao?: string;
   valor: number;
   vencimento: string;
+
+  excluido: boolean;
+  dataExclusao: string;
+  motivoExclusao: string;
+
+  recebido: boolean;
+  dataRecebimento: string;
+  obsRecebimento: string;
+  
   categoriaId?: string,
   subCategoriaId?: string,
   pessoaId?: string,

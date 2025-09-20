@@ -1,6 +1,10 @@
 import {
   Container, Box, Typography, Button, TableContainer, Paper,
-  Table, TableHead, TableRow, TableCell, TableBody, IconButton, TablePagination
+  Table, TableHead, TableRow, TableCell, TableBody, IconButton, TablePagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -60,6 +64,28 @@ export default function ContasReceberList() {
 
   const navigate = useNavigate();
 
+  const [filtroStatus, setFiltroStatus] = useState("aberto");
+  // Função para aplicar filtro
+  const getContasFiltradas = () => {
+    return contas.filter((c) => {
+      // Filtro status
+      const statusOk =
+        (filtroStatus === "aberto" && !c.excluido && c.recebido === false) ||
+        (filtroStatus === "recebido" && !c.excluido && c.recebido === true) ||
+        // (filtroStatus === "excluidas" && !!c.excluida) ||
+        (filtroStatus === "todas");
+      return statusOk;
+
+      // Filtro aluno (nome ou ID)
+      // const busca = filtroAluno.toLowerCase();
+      // const alunoOk =
+      //   c.alunoNome.toLowerCase().includes(busca) ||
+      //   String(c.alunoId).includes(busca);
+
+      // return statusOk && alunoOk;
+    });
+  };
+
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -73,6 +99,21 @@ export default function ContasReceberList() {
         >
           Novo
         </Button>
+
+        <FormControl size="small">
+          <InputLabel>Status</InputLabel>
+          <Select
+            value={filtroStatus}
+            label="Status"
+            onChange={(e) => setFiltroStatus(e.target.value)}
+            style={{ minWidth: 150 }}
+          >
+            <MenuItem value="aberto">Aberto</MenuItem>
+            <MenuItem value="recebido">Recebido</MenuItem>
+            {/* <MenuItem value="excluidas">Excluídas</MenuItem> */}
+            <MenuItem value="todas">Todas</MenuItem>
+          </Select>
+        </FormControl>        
       </Box>
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
         <Table stickyHeader>
@@ -85,7 +126,7 @@ export default function ContasReceberList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {contas.map(conta => (
+            {getContasFiltradas().map(conta => (
               <TableRow key={conta.id}>
                 <TableCell>{conta.descricao}</TableCell>
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
