@@ -122,7 +122,7 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         </Typography>
       </Box>
 
-      <PessoaAutocomplete
+      <PessoaAutocomplete autoFocus
         idInicial={contaReceber?.pessoaId}
         onChange={(pessoa) => setForm({ ...form, pessoaId: pessoa?.id ?? undefined })}
       />

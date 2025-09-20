@@ -22,7 +22,7 @@ export default function PessoasList() {
   const [total, setTotal] = useState(0);
   const rowsPerPage = 8;
 
-  const abrirNovo = () => navigate(ROUTES.categoriaNovo);
+  const abrirNovo = () => navigate(ROUTES.pessoaNovo);
   useKeyboardShortcuts({
     "Alt+N": abrirNovo,
     // "Alt+E": editarSelecionado,

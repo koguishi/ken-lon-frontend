@@ -1,4 +1,4 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Pessoa } from "../types";
 import { PessoaApi } from "../api/PessoaApi";
@@ -47,6 +47,10 @@ export default function PessoaForm({ pessoa: pessoa, onSave, onCancel }: Props) 
     <Box component="form" onSubmit={handleSubmit} sx={{
       mb: 4, backgroundColor: "background.paper", padding: 2, borderRadius: 2,
     }}>
+      <Typography variant="h5" gutterBottom>
+        Pessoa
+      </Typography>
+      
       <TextField
         label="Nome"
         name="nome"
@@ -55,6 +59,7 @@ export default function PessoaForm({ pessoa: pessoa, onSave, onCancel }: Props) 
         fullWidth
         margin="normal"
         required
+        autoFocus
         sx={{
           input: {
             backgroundColor: "background.paper",

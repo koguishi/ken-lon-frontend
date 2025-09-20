@@ -8,11 +8,12 @@ interface Pessoa {
 }
 
 interface Props {
+  autoFocus?: boolean;
   idInicial?: string; // usado na edição
   onChange?: (pessoa: Pessoa | null) => void;
 }
 
-export default function PessoaAutocomplete({ idInicial: pessoaIdInicial, onChange }: Props) {
+export default function PessoaAutocomplete({ autoFocus, idInicial: pessoaIdInicial, onChange }: Props) {
   const { getAll, getById } = PessoaApi;  
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<Pessoa[]>([]);
@@ -79,6 +80,7 @@ export default function PessoaAutocomplete({ idInicial: pessoaIdInicial, onChang
       loading={loading}
       renderInput={(params) => (
         <TextField
+          autoFocus={autoFocus}
           {...params}
           label="Selecione um pessoa"
           slotProps={{
