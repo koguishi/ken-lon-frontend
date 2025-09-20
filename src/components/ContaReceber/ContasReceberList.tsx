@@ -142,7 +142,10 @@ export default function ContasReceberList() {
                 </TableCell>
 
                 <TableCell>
-                  <IconButton color="primary" onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}>
+                  <IconButton
+                    color={conta.recebido ? "error" : "primary"}
+                    onClick={() => navigate(`${ROUTES.registrarRecebimento.build(conta.id!)}`)}
+                  >
                     <AttachMoney />
                   </IconButton>
 
