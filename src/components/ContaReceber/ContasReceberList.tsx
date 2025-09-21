@@ -22,46 +22,48 @@ import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 import { AttachMoney } from "@mui/icons-material";
 
 export default function ContasReceberList() {
+  const { confirm } = useConfirm();
+  const { handleApiError } = useApiError();
   const { getAll, remove } = ContaReceberApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
 
   const abrirNovo = () => navigate(ROUTES.contaReceberNovo);
   useKeyboardShortcuts({
     "Alt+N": abrirNovo,
     // "Alt+E": editarSelecionado,
     // "Alt+D": deletarSelecionado,
-  });  
+  });
 
   const fetchContasReceber = () => {
-    getAll(page, rowsPerPage).then((res) => {
+    getAll(filtroRecebido, page + 1, rowsPerPage).then((res) => {
       setContas(res.data.contas);
       setTotal(res.data.totalItems);
     });
   }
 
+  const [filtroStatus, setFiltroStatus] = useState("aberto");
+  const filtroRecebido = (filtroStatus === "aberto")
+    ? false
+    : (filtroStatus === "recebido")
+      ? true
+      : undefined;
+
   useEffect(() => {
     fetchContasReceber();
-  }, [page, rowsPerPage]);
-
-  const { confirm } = useConfirm();  
-  const { handleApiError } = useApiError();
+  }, [page, rowsPerPage, filtroStatus]);
 
   const handleRecebimento = async (id: string, recebido?: boolean) => {
-    try {
-      recebido 
-        ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)
-        : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
-    } catch (err) {
-      handleApiError(err, "excluir conta a receber");
-    }    
+    recebido
+      ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)
+      : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
   };
 
   const handleDelete = async (id: string) => {
     const ok = await confirm("Deseja realmente excluir esta conta?");
-    if (!ok) return;    
+    if (!ok) return;
 
     try {
       await remove(id);
@@ -75,38 +77,38 @@ export default function ContasReceberList() {
 
   const navigate = useNavigate();
 
-  const [filtroStatus, setFiltroStatus] = useState("aberto");
-  // Função para aplicar filtro
-  const getContasFiltradas = () => {
-    return contas.filter((c) => {
-      // Filtro status
-      const statusOk =
-        (filtroStatus === "aberto" && !c.excluido && c.recebido === false) ||
-        (filtroStatus === "recebido" && !c.excluido && c.recebido === true) ||
-        // (filtroStatus === "excluidas" && !!c.excluida) ||
-        (filtroStatus === "todas");
-      return statusOk;
+  // Função para aplicar filtro localmente
+  // passou a ser filtrado pela API em 21/09/25
+  // const getContasFiltradas = () => {
+  //   return contas.filter((c) => {
+  //     // Filtro status
+  //     const statusOk =
+  //       (filtroStatus === "aberto" && !c.excluido && c.recebido === false) ||
+  //       (filtroStatus === "recebido" && !c.excluido && c.recebido === true) ||
+  //       // (filtroStatus === "excluidas" && !!c.excluida) ||
+  //       (filtroStatus === "todas");
+  //     return statusOk;
 
-      // Filtro aluno (nome ou ID)
-      // const busca = filtroAluno.toLowerCase();
-      // const alunoOk =
-      //   c.alunoNome.toLowerCase().includes(busca) ||
-      //   String(c.alunoId).includes(busca);
+  //     // Filtro aluno (nome ou ID)
+  //     // const busca = filtroAluno.toLowerCase();
+  //     // const alunoOk =
+  //     //   c.alunoNome.toLowerCase().includes(busca) ||
+  //     //   String(c.alunoId).includes(busca);
 
-      // return statusOk && alunoOk;
-    });
-  };
+  //     // return statusOk && alunoOk;
+  //   });
+  // };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <Container maxWidth="md" sx={{ mt: 0 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={0}>
         <Typography variant="h5" gutterBottom>
           Contas a Receber
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate(ROUTES.contaReceberNovo)}
+          onClick={ abrirNovo }
         >
           Novo
         </Button>
@@ -127,7 +129,7 @@ export default function ContasReceberList() {
         </FormControl>        
       </Box>
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
-        <Table stickyHeader>
+        <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
               <TableCell>Nome</TableCell>
@@ -138,7 +140,7 @@ export default function ContasReceberList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getContasFiltradas().map(conta => (
+            {contas.map(conta => (
               <TableRow key={conta.id}>
                 <TableCell>{conta.descricao}</TableCell>
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
