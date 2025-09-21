@@ -2,6 +2,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Categoria } from "../types";
 import { CategoriaApi } from "../api/CategoriaApi";
+import { useApiError } from "../api/useApiError";
 
 interface Props {
   categoria?: Categoria;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function CategoriaForm({ categoria: categoria, onSave, onCancel }: Props) {
   const { create, update } = CategoriaApi;
+  const { handleApiError } = useApiError();
   const [form, setForm] = useState<Categoria>({ nome: "", subCategorias: [] });
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function CategoriaForm({ categoria: categoria, onSave, onCancel }
       onSave();
       setForm({ nome: "" });
     } catch (err) {
-      console.error("Erro ao salvar categoria:", err);
+      handleApiError(err, "excluir conta a receber");
     }
   };
 

@@ -22,6 +22,8 @@ import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 import { AttachMoney } from "@mui/icons-material";
 
 export default function ContasReceberList() {
+  const { confirm } = useConfirm();
+  const { handleApiError } = useApiError();
   const { getAll, remove } = ContaReceberApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);
   const [page, setPage] = useState(0);
@@ -46,22 +48,15 @@ export default function ContasReceberList() {
     fetchContasReceber();
   }, [page, rowsPerPage]);
 
-  const { confirm } = useConfirm();  
-  const { handleApiError } = useApiError();
-
   const handleRecebimento = async (id: string, recebido?: boolean) => {
-    try {
-      recebido 
-        ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)
-        : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
-    } catch (err) {
-      handleApiError(err, "excluir conta a receber");
-    }    
+    recebido
+      ? navigate(`${ROUTES.estornarRecebimento.build(id!)}`)
+      : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
   };
 
   const handleDelete = async (id: string) => {
     const ok = await confirm("Deseja realmente excluir esta conta?");
-    if (!ok) return;    
+    if (!ok) return;
 
     try {
       await remove(id);

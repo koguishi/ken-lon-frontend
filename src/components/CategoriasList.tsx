@@ -9,8 +9,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ROUTES } from "../Routes";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { useConfirm } from "../hooks/useConfirm";
+import { toast } from "react-toastify";
+import { useApiError } from "../api/useApiError";
 
 export default function CategoriasList() {
+  const { confirm } = useConfirm();
+  const { handleApiError } = useApiError();
   const { getAll, remove } = CategoriaApi;
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [page, setPage] = useState(0);
@@ -33,13 +38,21 @@ export default function CategoriasList() {
 
   useEffect(() => {
     fetch();
-  }, [page, rowsPerPage]); 
+  }, [page, rowsPerPage]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Deseja realmente excluir esta categoria?")) return;
+    const ok = await confirm("Deseja realmente excluir esta categoria?");
+    if (!ok) return;
 
-    await remove(id);
-    fetch();
+    try {
+      await remove(id);
+      toast.success("Categoria excluída com sucesso!");
+
+      // atualizar a lista
+      fetch();
+    } catch (err) {
+      handleApiError(err, "excluir conta a receber");
+    }
   };
 
   const navigate = useNavigate();
