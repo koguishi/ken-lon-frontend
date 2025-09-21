@@ -38,15 +38,22 @@ export default function ContasReceberList() {
   });
 
   const fetchContasReceber = () => {
-    getAll(page + 1, rowsPerPage).then((res) => {
+    getAll(filtroRecebido, page + 1, rowsPerPage).then((res) => {
       setContas(res.data.contas);
       setTotal(res.data.totalItems);
     });
   }
 
+  const [filtroStatus, setFiltroStatus] = useState("aberto");
+  const filtroRecebido = (filtroStatus === "aberto")
+    ? false
+    : (filtroStatus === "recebido")
+      ? true
+      : undefined;
+
   useEffect(() => {
     fetchContasReceber();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, filtroStatus]);
 
   const handleRecebimento = async (id: string, recebido?: boolean) => {
     recebido
@@ -70,27 +77,27 @@ export default function ContasReceberList() {
 
   const navigate = useNavigate();
 
-  const [filtroStatus, setFiltroStatus] = useState("aberto");
-  // Função para aplicar filtro
-  const getContasFiltradas = () => {
-    return contas.filter((c) => {
-      // Filtro status
-      const statusOk =
-        (filtroStatus === "aberto" && !c.excluido && c.recebido === false) ||
-        (filtroStatus === "recebido" && !c.excluido && c.recebido === true) ||
-        // (filtroStatus === "excluidas" && !!c.excluida) ||
-        (filtroStatus === "todas");
-      return statusOk;
+  // Função para aplicar filtro localmente
+  // passou a ser filtrado pela API em 21/09/25
+  // const getContasFiltradas = () => {
+  //   return contas.filter((c) => {
+  //     // Filtro status
+  //     const statusOk =
+  //       (filtroStatus === "aberto" && !c.excluido && c.recebido === false) ||
+  //       (filtroStatus === "recebido" && !c.excluido && c.recebido === true) ||
+  //       // (filtroStatus === "excluidas" && !!c.excluida) ||
+  //       (filtroStatus === "todas");
+  //     return statusOk;
 
-      // Filtro aluno (nome ou ID)
-      // const busca = filtroAluno.toLowerCase();
-      // const alunoOk =
-      //   c.alunoNome.toLowerCase().includes(busca) ||
-      //   String(c.alunoId).includes(busca);
+  //     // Filtro aluno (nome ou ID)
+  //     // const busca = filtroAluno.toLowerCase();
+  //     // const alunoOk =
+  //     //   c.alunoNome.toLowerCase().includes(busca) ||
+  //     //   String(c.alunoId).includes(busca);
 
-      // return statusOk && alunoOk;
-    });
-  };
+  //     // return statusOk && alunoOk;
+  //   });
+  // };
 
   return (
     <Container maxWidth="md" sx={{ mt: 0 }}>
@@ -133,7 +140,7 @@ export default function ContasReceberList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getContasFiltradas().map(conta => (
+            {contas.map(conta => (
               <TableRow key={conta.id}>
                 <TableCell>{conta.descricao}</TableCell>
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>

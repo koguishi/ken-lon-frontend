@@ -3,9 +3,9 @@ import api from "./apiClient";
 const url = `${import.meta.env.VITE_API_URL}/contasreceber`;
 
 export const ContaReceberApi = {
-    getAll: (page: number = 1, pageSize: number = 10, search?: string) =>
+    getAll: (recebido?: boolean, page: number = 1, pageSize: number = 10, search?: string) =>
         api.get(url, {
-            params: { page, pageSize, search }
+            params: { recebido, page, pageSize, search }
         }
     ),
     getById: (id: string) => api.get(`${url}/${id}`),
