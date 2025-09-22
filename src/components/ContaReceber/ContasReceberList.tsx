@@ -132,7 +132,7 @@ export default function ContasReceberList() {
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Nome</TableCell>
+              <TableCell>Descrição</TableCell>
               <TableCell>Vencimento</TableCell>
               <TableCell>Valor</TableCell>
               <TableCell>Recebimento</TableCell>
@@ -142,7 +142,18 @@ export default function ContasReceberList() {
           <TableBody>
             {contas.map(conta => (
               <TableRow key={conta.id}>
-                <TableCell>{conta.descricao}</TableCell>
+                <Tooltip title={conta.descricao}>
+                  <TableCell
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: 200, // define a largura máxima
+                    }}
+                  >
+                    {conta.descricao}
+                  </TableCell>
+                </Tooltip>
                 <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
                 <TableCell>
                   R$ {conta.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
