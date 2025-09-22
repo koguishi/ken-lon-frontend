@@ -30,6 +30,7 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
   const { create: createConta, update: updateConta } = ContaReceberApi;
   const { getAll: getCategorias } = CategoriaApi;
   const [form, setForm] = useState<ContaReceberDto>({ valor: 0, vencimento: "", descricao: ""
+    // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
     // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
     // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
     , categoriaId: undefined, subCategoriaId: undefined, pessoaId: undefined});
@@ -70,6 +71,7 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         categoriaId: contaReceber.categoriaId,
         subCategoriaId: contaReceber.subCategoriaId,
         pessoaId: contaReceber.pessoaId,
+        // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
         // excluido: contaReceber.excluido,
         // dataExclusao: contaReceber.dataExclusao,
         // motivoExclusao: contaReceber.motivoExclusao,
@@ -107,11 +109,23 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
     try {
       if (contaReceber)
         await updateConta(contaReceber.id!, form);
-      else
-        await createConta({ ... form });
+      else {
+        // Monta o DTO de insercao pois é diferente do de alteracao
+        // vencimentos: [] no lugar de vencimento: ""
+        const dto = {
+          descricao: form.descricao,
+          valor: form.valor,
+          vencimentos: [form.vencimento],
+          categoriaId: form.categoriaId,
+          subCategoriaId: form.subCategoriaId,
+          pessoaId: form.pessoaId,
+        };
+        await createConta({ ... dto });
+      }
 
       onSave();
       setForm({ valor: 0, vencimento: "", descricao: ""
+        // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
         // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
         // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
         , categoriaId: "", subCategoriaId: "", pessoaId: "" 
