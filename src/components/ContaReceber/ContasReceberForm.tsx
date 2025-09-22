@@ -9,6 +9,17 @@ import dayjs from "dayjs";
 import { CategoriaApi } from "../../api/CategoriaApi";
 import PessoaAutocomplete from "../PessoaAutoComplete";
 
+interface ContaReceberDto {
+  id?: string;
+  descricao?: string;
+  valor: number;
+  vencimento: string;
+  
+  categoriaId?: string,
+  subCategoriaId?: string,
+  pessoaId?: string,
+}
+
 interface Props {
   contaReceber?: ContaReceber;
   onSave: () => void;
@@ -18,9 +29,9 @@ interface Props {
 export default function ContaReceberForm({ contaReceber: contaReceber, onSave, onCancel }: Props) {
   const { create: createConta, update: updateConta } = ContaReceberApi;
   const { getAll: getCategorias } = CategoriaApi;
-  const [form, setForm] = useState<ContaReceber>({ valor: 0, vencimento: "", descricao: ""
-    , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
-    , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
+  const [form, setForm] = useState<ContaReceberDto>({ valor: 0, vencimento: "", descricao: ""
+    // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
+    // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
     , categoriaId: undefined, subCategoriaId: undefined, pessoaId: undefined});
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaId, setCategoriaId] = useState("");
@@ -59,13 +70,13 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         categoriaId: contaReceber.categoriaId,
         subCategoriaId: contaReceber.subCategoriaId,
         pessoaId: contaReceber.pessoaId,
-        excluido: contaReceber.excluido,
-        dataExclusao: contaReceber.dataExclusao,
-        motivoExclusao: contaReceber.motivoExclusao,
-        recebido: contaReceber.recebido,
-        dataRecebimento: contaReceber.dataRecebimento,
-        meioRecebimento: contaReceber.meioRecebimento,
-        obsRecebimento: contaReceber.obsRecebimento
+        // excluido: contaReceber.excluido,
+        // dataExclusao: contaReceber.dataExclusao,
+        // motivoExclusao: contaReceber.motivoExclusao,
+        // recebido: contaReceber.recebido,
+        // dataRecebimento: contaReceber.dataRecebimento,
+        // meioRecebimento: contaReceber.meioRecebimento,
+        // obsRecebimento: contaReceber.obsRecebimento
       });
       if (contaReceber.categoriaId)
       {
@@ -101,8 +112,8 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
       onSave();
       setForm({ valor: 0, vencimento: "", descricao: ""
-        , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
-        , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
+        // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
+        // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
         , categoriaId: "", subCategoriaId: "", pessoaId: "" 
       });
     } catch (err) {
