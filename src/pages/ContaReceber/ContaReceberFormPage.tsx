@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { ContaReceber } from "../../types";
-import ContaReceberForm from "../../components/ContaReceber/ContasReceberForm";
+import ContaReceberForm from "../../components/ContaReceber/ContaReceberForm";
 import DashboardLayout from "../../components/DashboardLayout";
 import { ContaReceberApi } from "../../api/ContaReceberApi";
 import { ROUTES } from "../../Routes";
