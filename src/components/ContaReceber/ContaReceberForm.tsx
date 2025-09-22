@@ -1,6 +1,6 @@
 import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
-import type { Categoria, ContaReceber, SubCategoria } from "../../types";
+import type { Categoria, ContaReceber, Pessoa, SubCategoria } from "../../types";
 import { ContaReceberApi } from "../../api/ContaReceberApi";
 import { useAsyncAction } from "../../hooks/useAsyncAction";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -39,6 +39,10 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
   const [subCategoriaId, setSubCategoriaId] = useState("");
   const [subcategorias, setSubcategorias] = useState<SubCategoria[]>([]);
 
+  const [pessoaNome, setPessoaNome] = useState("");
+  const [categoriaNome, setCategoriaNome] = useState("");
+  const [subCategoriaNome, setSubCategoriaNome] = useState("");
+  
   // Carrega todas as categorias no início
   useEffect(() => {
     getCategorias().then((res) => {
@@ -89,14 +93,42 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
     }
   }, [contaReceber]);
 
+
+  const handlePessoaChange = (pessoa: Pessoa | null) => {
+    setForm((prev) => ({
+      ...prev,
+      pessoaId: pessoa?.id ?? "",
+      descricao: `${pessoa?.nome ?? ""} - ${categoriaNome} - ${subCategoriaNome}`,
+    }));
+    setPessoaNome(pessoa?.nome ?? "");
+  };
+
   const handleCategoriaChange = (e: SelectChangeEvent) => {
     setCategoriaId(e.target.value);
-    setForm({ ...form, categoriaId: e.target.value == "" ? undefined : e.target.value });
+    // setForm({ ...form, categoriaId: e.target.value == "" ? undefined : e.target.value });
+
+    const novaCategoriaId = e.target.value;    
+    const categoria = categorias.find((c) => c.id === novaCategoriaId);
+    setForm((prev) => ({
+      ...prev,
+      categoriaId: e.target.value == "" ? undefined : e.target.value,
+      descricao: `${pessoaNome} - ${categoria?.nome ?? ""}`,
+    }));
+    setCategoriaNome(categoria?.nome ?? "");
   };
 
   const handleSubCategoriaChange = (e: SelectChangeEvent) => {
     setSubCategoriaId(e.target.value);
-    setForm({ ...form, subCategoriaId: e.target.value == "" ? undefined : e.target.value });
+    // setForm({ ...form, subCategoriaId: e.target.value == "" ? undefined : e.target.value });
+
+    const novaSubCategoriaId = e.target.value;    
+    const subCategoria = subcategorias.find((c) => c.id === novaSubCategoriaId);
+    setForm((prev) => ({
+      ...prev,
+      subCategoriaId: e.target.value == "" ? undefined : e.target.value,
+      descricao: `${pessoaNome} - ${categoriaNome} - ${subCategoria?.nome ?? ""}`,
+    }));
+    setSubCategoriaNome(subCategoria?.nome ?? "");
   };  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,7 +181,7 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
       <PessoaAutocomplete autoFocus
         idInicial={contaReceber?.pessoaId}
-        onChange={(pessoa) => setForm({ ...form, pessoaId: pessoa?.id ?? undefined })}
+        onChange={handlePessoaChange}
       />
 
       <FormControl fullWidth margin="dense">
