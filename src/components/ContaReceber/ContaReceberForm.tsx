@@ -1,4 +1,4 @@
-import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent } from "@mui/material";
+import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Categoria, ContaReceber, Pessoa, SubCategoria } from "../../types";
 import { ContaReceberApi } from "../../api/ContaReceberApi";
@@ -9,16 +9,16 @@ import dayjs from "dayjs";
 import { CategoriaApi } from "../../api/CategoriaApi";
 import PessoaAutocomplete from "../PessoaAutoComplete";
 
-interface ContaReceberDto {
-  id?: string;
-  descricao?: string;
-  valor: number;
-  vencimento: string;
+// interface ContaReceberDto {
+//   id?: string;
+//   descricao?: string;
+//   valor: number;
+//   vencimento: string;
   
-  categoriaId?: string,
-  subCategoriaId?: string,
-  pessoaId?: string,
-}
+//   categoriaId?: string,
+//   subCategoriaId?: string,
+//   pessoaId?: string,
+// }
 
 interface Props {
   contaReceber?: ContaReceber;
@@ -26,22 +26,26 @@ interface Props {
   onCancel?: () => void;
 }
 
-export default function ContaReceberForm({ contaReceber: contaReceber, onSave, onCancel }: Props) {
+export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Props) {
   const { create: createConta, update: updateConta } = ContaReceberApi;
   const { getAll: getCategorias } = CategoriaApi;
-  const [form, setForm] = useState<ContaReceberDto>({ valor: 0, vencimento: "", descricao: ""
-    // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
-    // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
-    // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
-    , categoriaId: undefined, subCategoriaId: undefined, pessoaId: undefined});
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+
+  const [pessoaId, setPessoaId] = useState("");
   const [categoriaId, setCategoriaId] = useState("");
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [subCategoriaId, setSubCategoriaId] = useState("");
-  const [subcategorias, setSubcategorias] = useState<SubCategoria[]>([]);
+  const [subCategorias, setSubcategorias] = useState<SubCategoria[]>([]);
+
+  const [descricao, setDescricao] = useState("");
+  const [valor, setValor] = useState(0);
+  const [vencimento, setVencimento] = useState("");
 
   const [pessoaNome, setPessoaNome] = useState("");
   const [categoriaNome, setCategoriaNome] = useState("");
   const [subCategoriaNome, setSubCategoriaNome] = useState("");
+
+  const [recorrencia, setRecorrencia] = useState(false);
+  const [qtdParcelas, setQtdParcelas] = useState(1);
   
   // Carrega todas as categorias no início
   useEffect(() => {
@@ -53,37 +57,34 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
   // Quando muda a categoria, atualiza as subcategorias
   useEffect(() => {
     carregarSubCategorias();
-    setForm({ ...form, subCategoriaId: undefined });
-  }, [form.categoriaId]);
+    setSubCategoriaId("");
+  }, [categoriaId]);
 
   const carregarSubCategorias = () => {
-    const categoria = categorias.find((c) => c.id === form.categoriaId);
-    if (categoria) setSubcategorias(categoria.subCategorias!);
-    else setSubcategorias([]);
+    setSubcategorias([]);
+    if (categoriaId) {
+      const categoria = categorias.find((c) => c.id === categoriaId);
+      setSubcategorias(categoria?.subCategorias!);
+    }
   }
 
   // Preenche o form quando há registro para edição   
   useEffect(() => {
     if (contaReceber) {
-      setForm({
-        id: contaReceber.id, // agora tratado como string UUID
-        descricao: contaReceber.descricao,
-        vencimento: contaReceber.vencimento
+      setDescricao(contaReceber.descricao ?? "");
+      setValor(contaReceber.valor ?? 0);
+      setVencimento(contaReceber.vencimento
           ? contaReceber.vencimento.split("T")[0] // mantém só a parte YYYY-MM-DD
-          : "",
-        valor: contaReceber.valor,
-        categoriaId: contaReceber.categoriaId,
-        subCategoriaId: contaReceber.subCategoriaId,
-        pessoaId: contaReceber.pessoaId,
-        // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
-        // excluido: contaReceber.excluido,
-        // dataExclusao: contaReceber.dataExclusao,
-        // motivoExclusao: contaReceber.motivoExclusao,
-        // recebido: contaReceber.recebido,
-        // dataRecebimento: contaReceber.dataRecebimento,
-        // meioRecebimento: contaReceber.meioRecebimento,
-        // obsRecebimento: contaReceber.obsRecebimento
-      });
+          : ""
+      );
+      setPessoaId(contaReceber.pessoaId ?? "");
+      setCategoriaId(contaReceber.categoriaId ?? "");
+      setSubCategoriaId(contaReceber.subCategoriaId ?? "");
+
+      setPessoaNome(contaReceber.pessoaNome ?? "");
+      setCategoriaNome(contaReceber.categoriaNome ?? "");
+      setSubCategoriaNome(contaReceber.subCategoriaNome ?? "");      
+
       if (contaReceber.categoriaId)
       {
         setCategoriaId(contaReceber.categoriaId);
@@ -95,73 +96,61 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
 
 
   const handlePessoaChange = (pessoa: Pessoa | null) => {
-    setForm((prev) => ({
-      ...prev,
-      pessoaId: pessoa?.id ?? "",
-      descricao: `${pessoa?.nome ?? ""} - ${categoriaNome} - ${subCategoriaNome}`,
-    }));
+    setDescricao(`${pessoa?.nome ?? ""} - ${categoriaNome} - ${subCategoriaNome}`);
+    setPessoaId(pessoa?.id ?? "");
     setPessoaNome(pessoa?.nome ?? "");
   };
 
   const handleCategoriaChange = (e: SelectChangeEvent) => {
     setCategoriaId(e.target.value);
-    // setForm({ ...form, categoriaId: e.target.value == "" ? undefined : e.target.value });
-
     const novaCategoriaId = e.target.value;    
     const categoria = categorias.find((c) => c.id === novaCategoriaId);
-    setForm((prev) => ({
-      ...prev,
-      categoriaId: e.target.value == "" ? undefined : e.target.value,
-      descricao: `${pessoaNome} - ${categoria?.nome ?? ""}`,
-    }));
+    setDescricao(`${pessoaNome} - ${categoria?.nome ?? ""}`);
     setCategoriaNome(categoria?.nome ?? "");
   };
 
   const handleSubCategoriaChange = (e: SelectChangeEvent) => {
     setSubCategoriaId(e.target.value);
-    // setForm({ ...form, subCategoriaId: e.target.value == "" ? undefined : e.target.value });
-
     const novaSubCategoriaId = e.target.value;    
-    const subCategoria = subcategorias.find((c) => c.id === novaSubCategoriaId);
-    setForm((prev) => ({
-      ...prev,
-      subCategoriaId: e.target.value == "" ? undefined : e.target.value,
-      descricao: `${pessoaNome} - ${categoriaNome} - ${subCategoria?.nome ?? ""}`,
-    }));
+    const subCategoria = subCategorias.find((c) => c.id === novaSubCategoriaId);
+    setDescricao(`${pessoaNome} - ${categoriaNome} - ${subCategoria?.nome ?? ""}`);
     setSubCategoriaNome(subCategoria?.nome ?? "");
   };  
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleDescricaoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescricao(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      if (contaReceber)
-        await updateConta(contaReceber.id!, form);
+      if (contaReceber) {
+        const dto = {
+          descricao: descricao,
+          valor: valor,
+          vencimento: vencimento,
+          categoriaId: categoriaId == "" ? undefined : categoriaId,
+          subCategoriaId: subCategoriaId == "" ? undefined : subCategoriaId,
+          pessoaId: pessoaId == "" ? undefined : pessoaId,
+        };
+        await updateConta(contaReceber.id!, dto);
+      }
       else {
         // Monta o DTO de insercao pois é diferente do de alteracao
         // vencimentos: [] no lugar de vencimento: ""
         const dto = {
-          descricao: form.descricao,
-          valor: form.valor,
-          vencimentos: [form.vencimento],
-          categoriaId: form.categoriaId,
-          subCategoriaId: form.subCategoriaId,
-          pessoaId: form.pessoaId,
+          descricao: descricao,
+          valor: valor,
+          vencimentos: [vencimento],
+          categoriaId: categoriaId == "" ? undefined : categoriaId,
+          subCategoriaId: subCategoriaId == "" ? undefined : subCategoriaId,
+          pessoaId: pessoaId == "" ? undefined : pessoaId,
         };
         await createConta({ ... dto });
       }
 
       onSave();
-      setForm({ valor: 0, vencimento: "", descricao: ""
-        // campos desnecessário, pois agora estamos usando um dto especifico - 22/09/2025
-        // , excluido: false, dataExclusao: undefined, motivoExclusao: undefined
-        // , recebido: false, dataRecebimento: undefined, meioRecebimento: undefined, obsRecebimento: undefined
-        , categoriaId: "", subCategoriaId: "", pessoaId: "" 
-      });
     } catch (err) {
       console.error("Erro ao salvar conta a receber:", err);
     }
@@ -179,48 +168,57 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
         </Typography>
       </Box>
 
-      <PessoaAutocomplete autoFocus
-        idInicial={contaReceber?.pessoaId}
-        onChange={handlePessoaChange}
-      />
+      <Grid container>
+        <Grid size={12}>
+          <PessoaAutocomplete autoFocus
+            idInicial={contaReceber?.pessoaId}
+            onChange={handlePessoaChange}
+          />
+        </Grid>
+      </Grid>
 
-      <FormControl fullWidth margin="dense">
-        <InputLabel>Categoria</InputLabel>
-        <Select value={categoriaId} label="Categoria" onChange={handleCategoriaChange}>
+      <Grid container>
+        <Grid size={6}>
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Categoria</InputLabel>
+            <Select value={categoriaId} label="Categoria" onChange={handleCategoriaChange}>
 
-          <MenuItem value={""}>
-            <em>Nenhuma categoria</em>
-          </MenuItem>
+              <MenuItem value={""}>
+                <em>Nenhuma categoria</em>
+              </MenuItem>
 
-          {categorias.map((c) => (
-            <MenuItem key={c.id} value={c.id}>
-              {c.nome}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+              {categorias.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.nome}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={6} pl={2}>
+          <FormControl fullWidth margin="dense" disabled={!categoriaId}>
+            <InputLabel>Subcategoria</InputLabel>
+            <Select value={subCategoriaId} label="Subcategoria" onChange={handleSubCategoriaChange}>
 
-      <FormControl fullWidth margin="dense" disabled={!form.categoriaId}>
-        <InputLabel>Subcategoria</InputLabel>
-        <Select value={subCategoriaId} label="Subcategoria" onChange={handleSubCategoriaChange}>
+              <MenuItem value={""}>
+                <em>Nenhuma subcategoria</em>
+              </MenuItem>
 
-          <MenuItem value={""}>
-            <em>Nenhuma subcategoria</em>
-          </MenuItem>
-
-          {subcategorias.map((s) => (
-            <MenuItem key={s.id} value={s.id}>
-              {s.nome}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+              {subCategorias.map((s) => (
+                <MenuItem key={s.id} value={s.id}>
+                  {s.nome}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
 
       <TextField
         label="Descrição"
         name="descricao"
-        value={form.descricao}
-        onChange={handleChange}
+        value={descricao}
+        onChange={handleDescricaoChange}
         fullWidth
         margin="normal"
         required
@@ -232,30 +230,48 @@ export default function ContaReceberForm({ contaReceber: contaReceber, onSave, o
           label: { color: "text.primary" },
         }}
       />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Data do Vencimento"
-          value={form.vencimento ? dayjs(form.vencimento) : null}
 
-          onChange={(newValue) =>
-            setForm({
-              ...form,
-              vencimento: newValue ? newValue.format("YYYY-MM-DD") : "", // salva no formato ISO
-            })
-          }          
-          format="DD/MM/YYYY"
-          slotProps={{ textField: { required: true, fullWidth: true } }}
-        />
-      </LocalizationProvider>
       <TextField
         label="Valor"
         type="number"
-        fullWidth
+        // fullWidth
+        sx={{ mr: 2 }}
         margin="dense"
         required
-        value={form.valor || ""}
-        onChange={(e) => setForm({ ...form, valor: Number(e.target.value) })}
+        value={valor || ""}
+        onChange={(e) => setValor(Number(e.target.value))}
       />
+
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker 
+          label="Data do Vencimento"
+          value={vencimento ? dayjs(vencimento) : null}
+
+          onChange={(newValue) =>
+            setVencimento(newValue ? newValue.format("YYYY-MM-DD") : "")
+          }          
+          format="DD/MM/YYYY"
+          slotProps={{ textField: { 
+            required: true, 
+            margin: "dense" 
+          } }}
+        />
+      </LocalizationProvider>
+
+      {!contaReceber && (
+        <TextField
+          label="Qtd. Parcelas"
+          type="number"
+          slotProps={{
+            htmlInput: { min: 1, max: 15 }
+          }}
+          sx={{ ml: 2, minWidth: 150 }}
+          margin="dense"
+          value={qtdParcelas}
+          onChange={(e) => setQtdParcelas(Number(e.target.value))}
+        />
+      )}
+
       <Box sx={{ mt: 2 }}>
         <Button type="submit" disabled={isLoading} variant="contained" color="primary" sx={{ mr: 2 }}>
           {isLoading ? "Salvando..." : "Salvar"}
