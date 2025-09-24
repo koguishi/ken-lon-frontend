@@ -1,4 +1,4 @@
-import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent, Grid } from "@mui/material";
+import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent, Grid, FormControlLabel, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Categoria, ContaReceber, Pessoa, SubCategoria } from "../../types";
 import { ContaReceberApi } from "../../api/ContaReceberApi";
@@ -8,17 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { CategoriaApi } from "../../api/CategoriaApi";
 import PessoaAutocomplete from "../PessoaAutoComplete";
-
-// interface ContaReceberDto {
-//   id?: string;
-//   descricao?: string;
-//   valor: number;
-//   vencimento: string;
-  
-//   categoriaId?: string,
-//   subCategoriaId?: string,
-//   pessoaId?: string,
-// }
+import type { PickerValue } from "@mui/x-date-pickers/internals";
 
 interface Props {
   contaReceber?: ContaReceber;
@@ -39,13 +29,16 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState(0);
   const [vencimento, setVencimento] = useState("");
+  const [vencimentos, setVencimentosApi] = useState(Array<string>());
 
   const [pessoaNome, setPessoaNome] = useState("");
   const [categoriaNome, setCategoriaNome] = useState("");
   const [subCategoriaNome, setSubCategoriaNome] = useState("");
 
   const [recorrencia, setRecorrencia] = useState(false);
-  const [qtdParcelas, setQtdParcelas] = useState(1);
+  const [qtdParcelas, setQtdParcelas] = useState(2);
+  const [frequencia, setFrequencia] = useState("mensal");
+  const [textoRecorrencia, setTextoRecorrencia] = useState("");
   
   // Carrega todas as categorias no início
   useEffect(() => {
@@ -94,7 +87,6 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
     }
   }, [contaReceber]);
 
-
   const handlePessoaChange = (pessoa: Pessoa | null) => {
     setDescricao(`${pessoa?.nome ?? ""} - ${categoriaNome} - ${subCategoriaNome}`);
     setPessoaId(pessoa?.id ?? "");
@@ -121,6 +113,60 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
     setDescricao(e.target.value);
   };
 
+  const handleVencimentoChange = (e: PickerValue) => {
+    const vcto = e ? e.format("YYYY-MM-DD") : "";
+    setVencimento(vcto);
+    montarRecorrenciaMensal(vcto, qtdParcelas);
+  };
+
+  const handleQtdParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const parcelas = Number(e.target.value);
+    setQtdParcelas(parcelas);
+    montarRecorrenciaMensal(vencimento, parcelas);
+  };
+
+  const addMonths = (date: Date, monthsToAdd: number): Date => {
+    const newDate = new Date(date);
+    const day = newDate.getDate();
+
+    // Move para o primeiro dia do mês alvo
+    newDate.setDate(1);
+    newDate.setMonth(newDate.getMonth() + monthsToAdd);
+
+    // Pega o último dia do mês alvo
+    const lastDayOfTargetMonth = new Date(
+      newDate.getFullYear(),
+      newDate.getMonth() + 1,
+      0
+    ).getDate();
+
+    // Define o dia como o mínimo entre o dia original e o último dia do mês
+    newDate.setDate(Math.min(day, lastDayOfTargetMonth));
+
+    return newDate;
+  };
+
+  function formatDateToYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  const montarRecorrenciaMensal = (vencimento: string, qtdParcelas: number) => {
+    let vctosApi: string[] = [];
+    let vctosForm: string[] = [];
+    let atual = new Date(vencimento);
+    atual.setDate(atual.getDate() + 1); // Adiciona os dias à data    
+    for (let cont = 0; cont < qtdParcelas; cont++) {
+      let proxVenc = addMonths(atual, cont);
+      vctosApi.push(formatDateToYYYYMMDD(proxVenc));
+      vctosForm.push(formatDateToYYYYMMDD(proxVenc));
+    }
+    setVencimentosApi(vctosApi);
+    setTextoRecorrencia(vctosForm.toString());
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -142,7 +188,7 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
         const dto = {
           descricao: descricao,
           valor: valor,
-          vencimentos: [vencimento],
+          vencimentos: recorrencia ? vencimentos : [vencimento],
           categoriaId: categoriaId == "" ? undefined : categoriaId,
           subCategoriaId: subCategoriaId == "" ? undefined : subCategoriaId,
           pessoaId: pessoaId == "" ? undefined : pessoaId,
@@ -234,22 +280,18 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
       <TextField
         label="Valor"
         type="number"
-        // fullWidth
         sx={{ mr: 2 }}
         margin="dense"
         required
         value={valor || ""}
         onChange={(e) => setValor(Number(e.target.value))}
       />
-
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker 
           label="Data do Vencimento"
           value={vencimento ? dayjs(vencimento) : null}
-
-          onChange={(newValue) =>
-            setVencimento(newValue ? newValue.format("YYYY-MM-DD") : "")
-          }          
+          onChange={handleVencimentoChange}
+            // setVencimento(newValue ? newValue.format("YYYY-MM-DD") : "")
           format="DD/MM/YYYY"
           slotProps={{ textField: { 
             required: true, 
@@ -259,17 +301,47 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
       </LocalizationProvider>
 
       {!contaReceber && (
-        <TextField
-          label="Qtd. Parcelas"
-          type="number"
-          slotProps={{
-            htmlInput: { min: 1, max: 15 }
-          }}
-          sx={{ ml: 2, minWidth: 150 }}
-          margin="dense"
-          value={qtdParcelas}
-          onChange={(e) => setQtdParcelas(Number(e.target.value))}
+        <FormControlLabel sx={{ ml: 1, mt: 2}}
+          control={<Switch checked={recorrencia} onChange={(e) => setRecorrencia(e.target.checked)} />}
+          label="Conta recorrente"
         />
+      )}
+
+      {recorrencia && (
+        <Box sx={{ mt: 1, p: 2, border: "1px dashed #ddd", borderRadius: 1 }}>
+          <Grid container>
+            <Grid size={2}>
+              <TextField
+                label="Qtd. Parcelas"
+                type="number"
+                slotProps={{
+                  htmlInput: { min: 2, max: 12 }
+                }}
+                fullWidth
+                // sx={{ pr: 1 }}
+                // margin="dense"
+                value={qtdParcelas}
+                onChange={handleQtdParcelasChange}
+              />
+            </Grid>
+            <Grid size={3} sx={{ pl: 2}}>
+              <FormControl fullWidth>
+                <InputLabel>Frequência</InputLabel>
+                <Select label="Frequência" value={frequencia} onChange={(e) => setFrequencia(e.target.value)}>
+                  <MenuItem value="mensal">Mensal</MenuItem>
+                  {/* <MenuItem value="semanal">Semanal</MenuItem>
+                  <MenuItem value="anual">Anual</MenuItem>
+                  <MenuItem value="personalizado">Personalizado</MenuItem> */}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid size={7} sx={{ pl: 2}}>
+              <Typography variant="body2">
+                {textoRecorrencia}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       )}
 
       <Box sx={{ mt: 2 }}>
