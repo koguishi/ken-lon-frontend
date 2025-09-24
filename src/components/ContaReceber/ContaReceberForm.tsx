@@ -1,4 +1,4 @@
-import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent, Grid, FormControlLabel, Switch } from "@mui/material";
+import { Box, TextField, Button, Typography, FormControl, Select, MenuItem, InputLabel, type SelectChangeEvent, Grid, FormControlLabel, Switch, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Categoria, ContaReceber, Pessoa, SubCategoria } from "../../types";
 import { ContaReceberApi } from "../../api/ContaReceberApi";
@@ -10,12 +10,17 @@ import { CategoriaApi } from "../../api/CategoriaApi";
 import PessoaAutocomplete from "../PessoaAutoComplete";
 import type { PickerValue } from "@mui/x-date-pickers/internals";
 import { addMonths, formatDateToDDMMYYYY, formatDateToYYYYMMDD } from "../../utils/date";
+import { toast } from "react-toastify";
 
 interface Props {
   contaReceber?: ContaReceber;
   onSave: () => void;
   onCancel?: () => void;
 }
+
+const RECORRENCIA_PARCELAS_MIN = 2;
+const RECORRENCIA_PARCELAS_MAX = 12;
+const RECORRENCIA_TOOLTIP = "entre 2 e 12";
 
 export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Props) {
   const { create: createConta, update: updateConta } = ContaReceberApi;
@@ -142,11 +147,16 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
       vctosForm.push(formatDateToDDMMYYYY(proxVenc));
     }
     setVencimentos(vctosApi);
-    setTextoRecorrencia(vctosForm.toString());
+    setTextoRecorrencia(vctosForm.join(", "));
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (qtdParcelas > RECORRENCIA_PARCELAS_MAX || qtdParcelas < RECORRENCIA_PARCELAS_MIN) {
+      toast.error("Observar limite de parcelas para recorrência!");
+      return;
+    }
 
     try {
       if (contaReceber) {
@@ -289,18 +299,23 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
         <Box sx={{ mt: 1, p: 2, border: "1px dashed #ddd", borderRadius: 1 }}>
           <Grid container>
             <Grid size={2}>
-              <TextField
-                label="Qtd. Parcelas"
-                type="number"
-                slotProps={{
-                  htmlInput: { min: 2, max: 12 }
-                }}
-                fullWidth
-                // sx={{ pr: 1 }}
-                // margin="dense"
-                value={qtdParcelas}
-                onChange={handleQtdParcelasChange}
-              />
+              <Tooltip title={RECORRENCIA_TOOLTIP}>
+                <TextField
+                  label="Qtd. Parcelas"
+                  type="number"
+                  slotProps={{
+                    htmlInput: {
+                      min: RECORRENCIA_PARCELAS_MIN,
+                      max: RECORRENCIA_PARCELAS_MAX,
+                    }
+                  }}
+                  fullWidth
+                  // sx={{ pr: 1 }}
+                  // margin="dense"
+                  value={qtdParcelas}
+                  onChange={handleQtdParcelasChange}
+                />
+              </Tooltip>
             </Grid>
             <Grid size={3} sx={{ pl: 2}}>
               <FormControl fullWidth>
@@ -314,7 +329,7 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
               </FormControl>
             </Grid>
             <Grid size={7} sx={{ pl: 2}}>
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
                 {textoRecorrencia}
               </Typography>
             </Grid>
