@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { CategoriaApi } from "../../api/CategoriaApi";
 import PessoaAutocomplete from "../PessoaAutoComplete";
 import type { PickerValue } from "@mui/x-date-pickers/internals";
+import { addMonths, formatDateToDDMMYYYY, formatDateToYYYYMMDD } from "../../utils/date";
 
 interface Props {
   contaReceber?: ContaReceber;
@@ -29,7 +30,7 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState(0);
   const [vencimento, setVencimento] = useState("");
-  const [vencimentos, setVencimentosApi] = useState(Array<string>());
+  const [vencimentos, setVencimentos] = useState(Array<string>());
 
   const [pessoaNome, setPessoaNome] = useState("");
   const [categoriaNome, setCategoriaNome] = useState("");
@@ -125,45 +126,22 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
     montarRecorrenciaMensal(vencimento, parcelas);
   };
 
-  const addMonths = (date: Date, monthsToAdd: number): Date => {
-    const newDate = new Date(date);
-    const day = newDate.getDate();
-
-    // Move para o primeiro dia do mês alvo
-    newDate.setDate(1);
-    newDate.setMonth(newDate.getMonth() + monthsToAdd);
-
-    // Pega o último dia do mês alvo
-    const lastDayOfTargetMonth = new Date(
-      newDate.getFullYear(),
-      newDate.getMonth() + 1,
-      0
-    ).getDate();
-
-    // Define o dia como o mínimo entre o dia original e o último dia do mês
-    newDate.setDate(Math.min(day, lastDayOfTargetMonth));
-
-    return newDate;
-  };
-
-  function formatDateToYYYYMMDD(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   const montarRecorrenciaMensal = (vencimento: string, qtdParcelas: number) => {
+    setVencimentos([]);
+    setTextoRecorrencia("");
+    if (!vencimento) {
+      return;
+    }
+    let atual = new Date(vencimento);
     let vctosApi: string[] = [];
     let vctosForm: string[] = [];
-    let atual = new Date(vencimento);
     atual.setDate(atual.getDate() + 1); // Adiciona os dias à data    
     for (let cont = 0; cont < qtdParcelas; cont++) {
       let proxVenc = addMonths(atual, cont);
       vctosApi.push(formatDateToYYYYMMDD(proxVenc));
-      vctosForm.push(formatDateToYYYYMMDD(proxVenc));
+      vctosForm.push(formatDateToDDMMYYYY(proxVenc));
     }
-    setVencimentosApi(vctosApi);
+    setVencimentos(vctosApi);
     setTextoRecorrencia(vctosForm.toString());
   }
 
