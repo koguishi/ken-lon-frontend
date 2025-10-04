@@ -25,6 +25,10 @@ export const ROUTES = {
         path: "/estornar-recebimento/:id",
         build: (id: string) => `/estornar-recebimento/${id}`
     },
+    fichaFinanceira: {
+        path: "/ficha-financeira/:pessoaId?",
+        build: (pessoaId?: string) => `/ficha-financeira/${pessoaId}`
+    },
     login: "/login",
     selfRegister: "/self-register",
     dashboard: "/dashboard",
