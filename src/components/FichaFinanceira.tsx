@@ -1,7 +1,7 @@
 import { AttachMoney } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Grid, IconButton, InputLabel, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { PickerValue } from "@mui/x-date-pickers/internals";
@@ -21,7 +21,7 @@ interface Props {
     pessoaIdInicial: string | undefined;
 }
 
-export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
+export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const { handleApiError } = useApiError();
@@ -31,13 +31,13 @@ export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
   const [filtroAte, setFiltroAte] = useState("");
   const { getByPessoaId, remove } = ContaReceberApi;
   const [contas, setContas] = useState<ContaReceber[]>([]);  
-  const [total, setTotal] = useState(0);
+  // const [total, setTotal] = useState(0);
   
   const fetchContas = () => {
     if (filtroPessoaId) {
       getByPessoaId(filtroPessoaId, filtroDe, filtroAte).then((res) => {
         setContas(res.data.contas);
-        setTotal(res.data.totalItems);
+        // setTotal(res.data.totalItems);
       });
     }
   }
@@ -55,6 +55,12 @@ export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
     const vcto = e ? e.format("YYYY-MM-DD") : "";
     setFiltroAte(vcto);
   };
+
+  useEffect(() => {
+    if (pessoaIdInicial) {
+      setFiltroPessoaId(pessoaIdInicial);
+    }
+  }, []);
 
   useEffect(() => {
     fetchContas();
@@ -101,15 +107,10 @@ export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
         Ficha Financeira
       </Typography>
 
-      {/* TODO: preencher a pessoa caso já venha o Id */}
-      {pessoaId && (
-        <InputLabel>{pessoaId}</InputLabel>
-      )}
-
       <Grid container>
         <Grid size={12}>
           <PessoaAutocomplete autoFocus
-              idInicial={pessoaId}
+              idInicial={pessoaIdInicial}
               onChange={handlePessoaChange}
           />
         </Grid>

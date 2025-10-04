@@ -44,7 +44,7 @@ export function App(): JSX.Element {
               <Route path={ROUTES.contaReceberDetalhe.path} element={<ContaReceberFormPage />} />
               <Route path={ROUTES.registrarRecebimento.path} element={<RegistrarRecebimentoPage />} />
               <Route path={ROUTES.estornarRecebimento.path} element={<EstornarRecebimentoPage />} />
-              <Route path={ROUTES.fichaFinanceira} element={<FichaFinanceiraPage />} />
+              <Route path={ROUTES.fichaFinanceira.path} element={<FichaFinanceiraPage />} />
             </Route>
           </Routes>
         </Router>

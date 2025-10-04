@@ -25,7 +25,7 @@ export default function RegistrarRecebimentoPage() {
   const voltar = () => {
     const state = location.state;
     if (state && state.from === "FichaFinanceira") {
-      navigate(ROUTES.fichaFinanceira, { state: { pessoaIdInicial: state.filtroPessoaId } });
+      navigate(ROUTES.fichaFinanceira.build(state.filtroPessoaId));
       return;
     }
     navigate(ROUTES.contasReceber);
