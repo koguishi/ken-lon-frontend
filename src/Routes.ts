@@ -25,6 +25,7 @@ export const ROUTES = {
         path: "/estornar-recebimento/:id",
         build: (id: string) => `/estornar-recebimento/${id}`
     },
+    fichaFinanceira: "/ficha-financeira",
     login: "/login",
     selfRegister: "/self-register",
     dashboard: "/dashboard",

@@ -19,6 +19,7 @@ import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
 import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
 // import MensalidadesPage01 from "./pages/MensalidadesPage01";
 import EstornarRecebimentoPage from "./pages/ContaReceber/EstornarRecebimentoPage";
+import FichaFinanceiraPage from "./pages/FichaFinanceiraPage";
 
 export function App(): JSX.Element {
   return (
@@ -43,6 +44,7 @@ export function App(): JSX.Element {
               <Route path={ROUTES.contaReceberDetalhe.path} element={<ContaReceberFormPage />} />
               <Route path={ROUTES.registrarRecebimento.path} element={<RegistrarRecebimentoPage />} />
               <Route path={ROUTES.estornarRecebimento.path} element={<EstornarRecebimentoPage />} />
+              <Route path={ROUTES.fichaFinanceira} element={<FichaFinanceiraPage />} />
             </Route>
           </Routes>
         </Router>
