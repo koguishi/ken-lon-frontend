@@ -66,7 +66,17 @@ export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
         `${ROUTES.estornarRecebimento.build(id!)}`,
         { state: { from: "FichaFinanceira", filtroPessoaId } }
       )
-      : navigate(`${ROUTES.registrarRecebimento.build(id!)}`);
+      : navigate(
+        `${ROUTES.registrarRecebimento.build(id!)}`,
+        { state: { from: "FichaFinanceira", filtroPessoaId } }
+      );
+  };
+
+  const handleEdit = async (id: string) => {
+    navigate(
+      `${ROUTES.contaReceberDetalhe.build(id)}`,
+      { state: { from: "FichaFinanceira", filtroPessoaId } }
+    )
   };
 
   const handleDelete = async (id: string) => {
@@ -175,7 +185,7 @@ export default function FichaFinanceira({ pessoaIdInicial: pessoaId }: Props) {
                   <IconButton
                     disabled={conta.recebido === true}
                     color="primary"
-                    onClick={() => navigate(`${ROUTES.contaReceberDetalhe.build(conta.id!)}`)}
+                    onClick={() => handleEdit(conta.id!)}
                   >
                     <EditIcon />
                   </IconButton>

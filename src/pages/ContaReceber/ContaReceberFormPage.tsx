@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import type { ContaReceber } from "../../types";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ContaReceberApi } from "../../api/ContaReceberApi";
 import ContaReceberForm from "../../components/ContaReceber/ContaReceberForm";
 import DashboardLayout from "../../components/DashboardLayout";
-import { ContaReceberApi } from "../../api/ContaReceberApi";
 import { ROUTES } from "../../Routes";
+import type { ContaReceber } from "../../types";
 
 export default function ContaReceberFormPage() {
   const { id } = useParams<{ id: string }>();
   const [contaReceber, setContaReceber] = useState<ContaReceber | undefined>(undefined);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { getById } = ContaReceberApi;
 
@@ -21,13 +22,26 @@ export default function ContaReceberFormPage() {
     }, [id]);
   }
 
+  const voltar = () => {
+    const state = location.state;
+    if (state && state.from === "FichaFinanceira") {
+      navigate(ROUTES.fichaFinanceira, { state: { pessoaIdInicial: state.filtroPessoaId } });
+      return;
+    }
+    navigate(ROUTES.contasReceber);
+  };
+
+  const handleCancel = () => {
+    voltar();
+  };
+
   const handleSave = () => {
-    navigate(ROUTES.contasReceber); // volta para listagem após salvar
+    voltar();
   };
 
   return(
     <DashboardLayout>
-      <ContaReceberForm contaReceber={contaReceber} onSave={handleSave} onCancel={() => navigate(ROUTES.contasReceber)} />
+      <ContaReceberForm contaReceber={contaReceber} onSave={handleSave} onCancel={handleCancel} />
     </DashboardLayout>
   );
 }
