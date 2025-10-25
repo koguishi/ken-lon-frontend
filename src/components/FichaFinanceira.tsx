@@ -1,7 +1,7 @@
 import { AttachMoney } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { PickerValue } from "@mui/x-date-pickers/internals";
@@ -16,6 +16,7 @@ import { useConfirm } from "../hooks/useConfirm";
 import { ROUTES } from "../Routes";
 import type { ContaReceber, Pessoa } from "../types";
 import PessoaAutocomplete from "./PessoaAutoComplete";
+import { FichaFinanceiraApi } from "../api/FichaFinanceiraApi";
 
 interface Props {
     pessoaIdInicial: string | undefined;
@@ -30,6 +31,7 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const [filtroDe, setFiltroDe] = useState("");
   const [filtroAte, setFiltroAte] = useState("");
   const { getByPessoaId, remove } = ContaReceberApi;
+  const { PdfQueue, PdfUrl } = FichaFinanceiraApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);  
   // const [total, setTotal] = useState(0);
   
@@ -98,6 +100,22 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
       handleApiError(err, "excluir conta a receber");
     }
   };
+
+  const [status, setStatus] = useState("");
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const gerar = async () => {
+    const response = await PdfQueue({ pessoaId: filtroPessoaId, vencimentoInicial: filtroDe, vencimentoFinal: filtroAte });
+    setStatus("processando");
+
+    const interval = setInterval(async () => {
+      const resp = await PdfUrl(response.data.jobId);
+      setStatus(resp.data.status);
+      if (resp.data.status === "pronto") {
+        setPdfUrl(resp.data.url);
+        clearInterval(interval);
+      }      
+    }, 3000);
+  };
   
   return (
     <Box sx={{
@@ -138,6 +156,16 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
           } }}
         />
       </LocalizationProvider>
+      <Button onClick={gerar}>Gerar PDF</Button>
+      {status === "processando" && <p>⏳ Aguarde... seu PDF está sendo gerado.</p>}
+      {status === "pronto" && pdfUrl && (
+        <p>
+          ✅ Seu PDF está pronto!{" "}
+          <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+            Baixar
+          </a>
+        </p>
+      )}      
 
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
         <Table stickyHeader size="small">
