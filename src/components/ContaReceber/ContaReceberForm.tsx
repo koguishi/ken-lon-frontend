@@ -63,7 +63,7 @@ export default function ContaReceberForm({ contaReceber, onSave, onCancel }: Pro
     setSubcategorias([]);
     if (categoriaId) {
       const categoria = categorias.find((c) => c.id === categoriaId);
-      setSubcategorias(categoria?.subCategorias!);
+      setSubcategorias(categoria?.subCategorias ?? []);
     }
   }
 
