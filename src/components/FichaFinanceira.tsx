@@ -31,7 +31,7 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const [filtroDe, setFiltroDe] = useState("");
   const [filtroAte, setFiltroAte] = useState("");
   const { getByPessoaId, remove } = ContaReceberApi;
-  const { PdfQueue, PdfUrl } = FichaFinanceiraApi;  
+  const { PdfGen, PdfUrl } = FichaFinanceiraApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);  
   // const [total, setTotal] = useState(0);
   
@@ -104,17 +104,25 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const [status, setStatus] = useState("");
   const [pdfUrl, setPdfUrl] = useState(null);
   const gerar = async () => {
-    const response = await PdfQueue({ pessoaId: filtroPessoaId, vencimentoInicial: filtroDe, vencimentoFinal: filtroAte });
+    const response = await PdfGen({ pessoaId: filtroPessoaId, vencimentoInicial: filtroDe, vencimentoFinal: filtroAte });
     setStatus("processando");
+    console.log(response.data.fileName);
 
-    const interval = setInterval(async () => {
-      const resp = await PdfUrl(response.data.jobId);
-      setStatus(resp.data.status);
-      if (resp.data.status === "pronto") {
-        setPdfUrl(resp.data.url);
-        clearInterval(interval);
-      }      
-    }, 3000);
+    // const interval = setInterval(async () => {
+    //   const resp = await PdfUrl(response.data.fileName);
+    //   setStatus(resp.data.status);
+    //   if (resp.data.status === "pronto") {
+    //     setPdfUrl(resp.data.url);
+    //     clearInterval(interval);
+    //   }
+    // }, 3000);
+
+    const resp = await PdfUrl(response.data.fileName);
+    setStatus(resp.data.status);
+    if (resp.data.status === "pronto") {
+      setPdfUrl(resp.data.url);
+    }
+
   };
   
   return (
