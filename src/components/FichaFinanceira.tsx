@@ -7,7 +7,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { PickerValue } from "@mui/x-date-pickers/internals";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ContaReceberApi } from "../api/ContaReceberApi";
@@ -17,6 +17,9 @@ import { ROUTES } from "../Routes";
 import type { ContaReceber, Pessoa } from "../types";
 import PessoaAutocomplete from "./PessoaAutoComplete";
 import { FichaFinanceiraApi } from "../api/FichaFinanceiraApi";
+import DownloadIcon from "@mui/icons-material/Download";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 
 interface Props {
     pessoaIdInicial: string | undefined;
@@ -34,6 +37,7 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const { PdfGen, PdfUrl } = FichaFinanceiraApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);  
   // const [total, setTotal] = useState(0);
+  const abortController = useRef<AbortController | null>(null);
   
   const fetchContas = () => {
     if (filtroPessoaId) {
@@ -64,8 +68,17 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
     }
   }, []);
 
+  // useEffect(() => {
+  //   fetchContas();
+  // }, [filtroPessoaId, filtroDe, filtroAte]);
   useEffect(() => {
-    fetchContas();
+    // fetchContas();
+    if (filtroPessoaId && filtroDe && filtroAte) {
+      setStatus("parado");
+      fetchContas();
+    } else {
+      setStatus("semFiltro");
+    }
   }, [filtroPessoaId, filtroDe, filtroAte]);
 
   const handleRecebimento = async (id: string, recebido?: boolean) => {
@@ -101,30 +114,58 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
     }
   };
 
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("semFiltro");
   const [pdfUrl, setPdfUrl] = useState(null);
-  const gerar = async () => {
-    const response = await PdfGen({ pessoaId: filtroPessoaId, vencimentoInicial: filtroDe, vencimentoFinal: filtroAte });
-    setStatus("processando");
-    console.log(response.data.fileName);
 
-    // const interval = setInterval(async () => {
-    //   const resp = await PdfUrl(response.data.fileName);
-    //   setStatus(resp.data.status);
-    //   if (resp.data.status === "pronto") {
-    //     setPdfUrl(resp.data.url);
-    //     clearInterval(interval);
-    //   }
-    // }, 3000);
+  const gerarCancelavel = async () => {
+    try {
+      setStatus("processando");
+      setPdfUrl(null);
 
-    const resp = await PdfUrl(response.data.fileName);
-    setStatus(resp.data.status);
-    if (resp.data.status === "pronto") {
-      setPdfUrl(resp.data.url);
+      // cria controller para cancelamento
+      abortController.current = new AbortController();
+
+      const response = await PdfGen(
+        {
+          pessoaId: filtroPessoaId,
+          vencimentoInicial: filtroDe,
+          vencimentoFinal: filtroAte,
+        },
+        { signal: abortController.current.signal } // passa o signal para o fetch
+      );
+
+      const fileName = response.data.fileName;
+
+      // Polling até o arquivo estar pronto
+      let pronto = false;
+      while (!pronto) {
+        const resp = await PdfUrl(fileName, { signal: abortController.current.signal });
+        if (resp.data.status === "pronto") {
+          setPdfUrl(resp.data.url);
+          setStatus("pronto");
+          pronto = true;
+        } else {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
+    } catch (err: any) {
+      if (err.name === "CanceledError") {
+        console.log("Processo cancelado pelo usuário.");
+        setStatus("parado");
+      } else {
+        console.error("Erro ao gerar PDF:", err);
+        setStatus("parado");
+      }
     }
-
   };
-  
+
+  const cancelar = () => {
+    if (abortController.current) {
+      abortController.current.abort();
+      abortController.current = null;
+    }
+  };
+
   return (
     <Box sx={{
       mb: 4, backgroundColor: "background.paper", padding: 2, borderRadius: 2,
@@ -164,16 +205,30 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
           } }}
         />
       </LocalizationProvider>
-      <Button onClick={gerar}>Gerar PDF</Button>
-      {status === "processando" && <p>⏳ Aguarde... seu PDF está sendo gerado.</p>}
-      {status === "pronto" && pdfUrl && (
-        <p>
-          ✅ Seu PDF está pronto!{" "}
-          <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-            Baixar
-          </a>
-        </p>
-      )}      
+      <Button
+        variant="contained"
+        color={
+          status === "processando" ? "warning" :
+          status === "pronto" ? "success" :
+          "primary"
+        }
+        startIcon={
+          status === "processando" ? <HourglassTopIcon /> :
+          status === "pronto" ? <DownloadIcon /> :
+          <PictureAsPdfIcon />
+        }
+        disabled={status === "semFiltro"}
+        onClick={() => {
+          if (status === "parado") gerarCancelavel();
+          else if (status === "processando") cancelar();
+          else if (status === "pronto" && pdfUrl) window.open(pdfUrl, "_blank");
+        }}
+      >
+        {status === "semFiltro" && "Gerar PDF"}
+        {status === "parado" && "Gerar PDF"}
+        {status === "processando" && "Gerando... (Cancelar)"}
+        {status === "pronto" && "Baixar PDF"}
+      </Button>
 
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
         <Table stickyHeader size="small">
