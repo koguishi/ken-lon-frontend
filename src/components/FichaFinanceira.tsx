@@ -51,14 +51,14 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
     }
   };
 
-  
   const fetchContas = () => {
-    if (filtroPessoaId) {
-      getByPessoaId(filtroPessoaId, filtroDe, filtroAte).then((res) => {
-        setContas(res.data.contas);
-        // setTotal(res.data.totalItems);
-      });
-    }
+    getByPessoaId(filtroPessoaId, filtroDe, filtroAte).then((res) => {
+      setContas(res.data.contas);
+      console.log(res.data.totalItems);
+      if (res.data.totalItems > 0)
+        setStatus("parado");
+      // setTotal(res.data.totalItems);
+    });
   }
 
   const handlePessoaChange = (pessoa: Pessoa | null) => {
@@ -72,11 +72,10 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   }, []);
 
   useEffect(() => {
+    setStatus("semFiltro");
+
     if (filtroPessoaId && filtroDe && filtroAte) {
-      setStatus("parado");
       fetchContas();
-    } else {
-      setStatus("semFiltro");
     }
   }, [filtroPessoaId, filtroDe, filtroAte]);
 
