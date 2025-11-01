@@ -2,11 +2,6 @@ import { AttachMoney } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Button, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import type { PickerValue } from "@mui/x-date-pickers/internals";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,15 +32,11 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const { getByPessoaId, remove } = ContaReceberApi;
   const { PdfGen, PdfUrl } = FichaFinanceiraApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);  
-  // const [total, setTotal] = useState(0);
   const abortController = useRef<AbortController | null>(null);
 
-  const [vencimentoDe, setVencimentoDe] = useState<string | undefined>(undefined);
-  const [vencimentoAte, setVencimentoAte] = useState<string | undefined>(undefined);
 
   const handleVencimentoDeChange = (data: string | null) => {
     if (data) {
-      setVencimentoDe(data);
       setStatus("parado");
       console.log('vencimento DE:', data);
       setFiltroDe(data);
@@ -54,7 +45,6 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   
   const handleVencimentoAteChange = (data: string | null) => {
     if (data) {
-      setVencimentoAte(data);
       setStatus("parado");
       console.log('vencimento ATE:', data);
       setFiltroAte(data);
@@ -75,27 +65,13 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
     setFiltroPessoaId(pessoa?.id!);
   };
 
-  // const handleFiltroVencimentoDeChange = (e: PickerValue) => {
-  //   const vcto = e ? e.format("YYYY-MM-DD") : "";
-  //   setFiltroDe(vcto);
-  // };
-
-  // const handleFiltroVencimentoAteChange = (e: PickerValue) => {
-  //   const vcto = e ? e.format("YYYY-MM-DD") : "";
-  //   setFiltroAte(vcto);
-  // };
-
   useEffect(() => {
     if (pessoaIdInicial) {
       setFiltroPessoaId(pessoaIdInicial);
     }
   }, []);
 
-  // useEffect(() => {
-  //   fetchContas();
-  // }, [filtroPessoaId, filtroDe, filtroAte]);
   useEffect(() => {
-    // fetchContas();
     if (filtroPessoaId && filtroDe && filtroAte) {
       setStatus("parado");
       fetchContas();
@@ -247,54 +223,6 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
         </Button>
       </Stack>      
 
-{/* 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker 
-          label="de"
-          value={filtroDe ? dayjs(filtroDe) : null}
-          onChange={handleFiltroVencimentoDeChange}
-          format="DD/MM/YYYY"
-          slotProps={{ textField: { 
-            required: true, 
-            margin: "dense" 
-          } }}
-        />
-        <DatePicker 
-          label="até"
-          value={filtroAte ? dayjs(filtroAte) : null}
-          onChange={handleFiltroVencimentoAteChange}
-          format="DD/MM/YYYY"
-          slotProps={{ textField: { 
-            required: true, 
-            margin: "dense" 
-          } }}
-        />
-      </LocalizationProvider>
-      <Button
-        variant="contained"
-        color={
-          status === "processando" ? "warning" :
-          status === "pronto" ? "success" :
-          "primary"
-        }
-        startIcon={
-          status === "processando" ? <HourglassTopIcon /> :
-          status === "pronto" ? <DownloadIcon /> :
-          <PictureAsPdfIcon />
-        }
-        disabled={status === "semFiltro"}
-        onClick={() => {
-          if (status === "parado") gerarCancelavel();
-          else if (status === "processando") cancelar();
-          else if (status === "pronto" && pdfUrl) window.open(pdfUrl, "_blank");
-        }}
-      >
-        {status === "semFiltro" && "Gerar PDF"}
-        {status === "parado" && "Gerar PDF"}
-        {status === "processando" && "Gerando... (Cancelar)"}
-        {status === "pronto" && "Baixar PDF"}
-      </Button>
- */}
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
         <Table stickyHeader size="small">
           <TableHead>
