@@ -1,12 +1,12 @@
 import { AttachMoney } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import type { PickerValue } from "@mui/x-date-pickers/internals";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs from "dayjs";
+import { Box, Button, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import type { PickerValue } from "@mui/x-date-pickers/internals";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ import { FichaFinanceiraApi } from "../api/FichaFinanceiraApi";
 import DownloadIcon from "@mui/icons-material/Download";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import DateInputMui from "./basic/DateInputMUI";
 
 interface Props {
     pessoaIdInicial: string | undefined;
@@ -38,6 +39,28 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const [contas, setContas] = useState<ContaReceber[]>([]);  
   // const [total, setTotal] = useState(0);
   const abortController = useRef<AbortController | null>(null);
+
+  const [vencimentoDe, setVencimentoDe] = useState<string | undefined>(undefined);
+  const [vencimentoAte, setVencimentoAte] = useState<string | undefined>(undefined);
+
+  const handleVencimentoDeChange = (data: string | null) => {
+    if (data) {
+      setVencimentoDe(data);
+      setStatus("parado");
+      console.log('vencimento DE:', data);
+      setFiltroDe(data);
+    }
+  };
+  
+  const handleVencimentoAteChange = (data: string | null) => {
+    if (data) {
+      setVencimentoAte(data);
+      setStatus("parado");
+      console.log('vencimento ATE:', data);
+      setFiltroAte(data);
+    }
+  };
+
   
   const fetchContas = () => {
     if (filtroPessoaId) {
@@ -52,15 +75,15 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
     setFiltroPessoaId(pessoa?.id!);
   };
 
-  const handleFiltroVencimentoDeChange = (e: PickerValue) => {
-    const vcto = e ? e.format("YYYY-MM-DD") : "";
-    setFiltroDe(vcto);
-  };
+  // const handleFiltroVencimentoDeChange = (e: PickerValue) => {
+  //   const vcto = e ? e.format("YYYY-MM-DD") : "";
+  //   setFiltroDe(vcto);
+  // };
 
-  const handleFiltroVencimentoAteChange = (e: PickerValue) => {
-    const vcto = e ? e.format("YYYY-MM-DD") : "";
-    setFiltroAte(vcto);
-  };
+  // const handleFiltroVencimentoAteChange = (e: PickerValue) => {
+  //   const vcto = e ? e.format("YYYY-MM-DD") : "";
+  //   setFiltroAte(vcto);
+  // };
 
   useEffect(() => {
     if (pessoaIdInicial) {
@@ -183,6 +206,48 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
         </Grid>
       </Grid>
 
+      <Stack direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 1, sm: 2 }}
+        alignItems="center"
+        justifyContent={{ xs: "center", sm: "space-between" }}
+      >
+        <DateInputMui
+          label="De"
+          value=""
+          onChange={handleVencimentoDeChange}
+        />
+        <DateInputMui
+          label="Até"
+          value=""
+          onChange={handleVencimentoAteChange}
+        />
+        <Button
+          variant="contained"
+          color={
+            status === "processando" ? "warning" :
+            status === "pronto" ? "success" :
+            "primary"
+          }
+          startIcon={
+            status === "processando" ? <HourglassTopIcon /> :
+            status === "pronto" ? <DownloadIcon /> :
+            <PictureAsPdfIcon />
+          }
+          disabled={status === "semFiltro"}
+          onClick={() => {
+            if (status === "parado") gerarCancelavel();
+            else if (status === "processando") cancelar();
+            else if (status === "pronto" && pdfUrl) window.open(pdfUrl, "_blank");
+          }}
+        >
+          {status === "semFiltro" && "Gerar PDF"}
+          {status === "parado" && "Gerar PDF"}
+          {status === "processando" && "Gerando... (Cancelar)"}
+          {status === "pronto" && "Baixar PDF"}
+        </Button>
+      </Stack>      
+
+{/* 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker 
           label="de"
@@ -229,7 +294,7 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
         {status === "processando" && "Gerando... (Cancelar)"}
         {status === "pronto" && "Baixar PDF"}
       </Button>
-
+ */}
       <TableContainer sx={{ width: 800, height: 450 }} component={Paper}>
         <Table stickyHeader size="small">
           <TableHead>
