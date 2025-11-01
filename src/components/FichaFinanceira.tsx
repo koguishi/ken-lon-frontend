@@ -38,26 +38,30 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const handleVencimentoDeChange = (data: string | null) => {
     if (data) {
       setStatus("parado");
-      console.log('vencimento DE:', data);
       setFiltroDe(data);
+    } else {
+      setStatus("semFiltro");
+      setContas([]);
+      setFiltroDe("");
     }
   };
   
   const handleVencimentoAteChange = (data: string | null) => {
     if (data) {
       setStatus("parado");
-      console.log('vencimento ATE:', data);
       setFiltroAte(data);
+    } else {
+      setStatus("semFiltro");
+      setContas([]);
+      setFiltroAte("");
     }
   };
 
   const fetchContas = () => {
     getByPessoaId(filtroPessoaId, filtroDe, filtroAte).then((res) => {
       setContas(res.data.contas);
-      console.log(res.data.totalItems);
       if (res.data.totalItems > 0)
         setStatus("parado");
-      // setTotal(res.data.totalItems);
     });
   }
 
