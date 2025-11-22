@@ -25,8 +25,8 @@ jobs:
           node-version: '20.19.0'
       - name: Install dependencies
         run: npm ci
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Build And Deploy
@@ -56,6 +56,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_JOLLY_DUNE_08F80840F }}
           action: "close"
+
 
 
 
