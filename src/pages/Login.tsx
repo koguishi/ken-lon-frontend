@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import {
@@ -38,6 +38,9 @@ export default function Login() {
             setError("Usuário ou senha inválidos");
         }
     };
+useEffect(() => {
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+}, []); 
 
     return (
         <Container component="main" maxWidth="xs">
