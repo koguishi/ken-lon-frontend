@@ -26,8 +26,10 @@ export default function AlunoListMUI() {
   // const [editAluno, setEditAluno] = useState<Aluno | null>(null);
   const rowsPerPage = 5;
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const fetchAlunos = () => {
-    fetch(`http://localhost:5285/api/alunos?page=${page + 1}&pageSize=${rowsPerPage}`)
+    fetch(`${apiUrl}/alunos?page=${page + 1}&pageSize=${rowsPerPage}`)
       .then(res => res.json())
       .then(data => {
         setAlunos(data.data ?? []);
@@ -41,7 +43,7 @@ export default function AlunoListMUI() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Deseja realmente excluir este aluno?")) return;
-    await fetch(`http://localhost:5285/api/alunos/${id}`, { method: "DELETE" });
+    await fetch(`${apiUrl}/alunos/${id}`, { method: "DELETE" });
     fetchAlunos();
   };
 

@@ -6,7 +6,7 @@ import React from "react";
 import dayjs from "dayjs";
 
 interface Aluno {
-  id?: number;
+  id?: string; //UUID
   nome: string;
   cpf: string;
   dataNascimento?: string; // novo campo, formato ISO "YYYY-MM-DD"
@@ -22,9 +22,13 @@ export default function AlunoForm({ aluno, onSave, onCancel }: Props) {
   const [form, setForm] = useState<Aluno>({ nome: "", cpf: "" });
 
   useEffect(() => {
+    // Preenche o form quando há um aluno para edição
     if (aluno)
       setForm({
-        ...aluno,
+        // ...aluno,
+        id: aluno.id, // agora tratado como string UUID
+        nome: aluno.nome,
+        cpf: aluno.cpf,        
         dataNascimento: aluno.dataNascimento
           ? aluno.dataNascimento.split("T")[0] // mantém só a parte YYYY-MM-DD
           : "",
@@ -35,12 +39,14 @@ export default function AlunoForm({ aluno, onSave, onCancel }: Props) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = aluno ? "PUT" : "POST";
     const url = aluno
-      ? `http://localhost:5285/api/alunos/${aluno.id}`
-      : "http://localhost:5285/api/alunos";
+      ? `${apiUrl}/alunos/${aluno.id}`
+      : `${apiUrl}/alunos`;
 
     try {
       await fetch(url, {

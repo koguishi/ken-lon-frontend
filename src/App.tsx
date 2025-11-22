@@ -1,65 +1,57 @@
-// import { useState, type JSX } from "react";
-// import AlunoForm from "./components/AlunoForm";
-// import AlunoList from "./components/AlunoListOld";
-// import Button from "@mui/material/Button";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import AlunoListMUI from "./components/AlunoList";
-
 import type { JSX } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AlunoListPage from "./pages/AlunoListPage";
-import AlunoFormPage from "./pages/AlunoFormPage";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
+import { AuthProvider } from "./auth/AuthContext";
+import { ROUTES } from "./Routes";
+import Login from "./pages/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import DashboardPage from "./pages/DashboardPage";
+import SelfRegister from "./pages/SelfRegister";
+import theme from "./theme";
+import PessoasListPage from "./pages/PessoasListPage";
+import PessoaFormPage from "./pages/PessoaFormPage";
+import CategoriasListPage from "./pages/CategoriasListPage";
+import CategoriaFormPage from "./pages/CategoriaFormPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
+import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
+import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
+// import MensalidadesPage01 from "./pages/MensalidadesPage01";
+import EstornarRecebimentoPage from "./pages/ContaReceber/EstornarRecebimentoPage";
+import FichaFinanceiraPage from "./pages/FichaFinanceiraPage";
 
 export function App(): JSX.Element {
-  const darkTheme = createTheme({
-    palette: { mode: "dark" },
-  });
   return (
-    <ThemeProvider theme={darkTheme}>
-
-    <Router>
-      {/* <nav style={{ padding: "1rem", background: "#eee" }}>
-        <Link to="/" style={{ marginRight: "1rem" }}>Lista de Alunos</Link>
-        <Link to="/novo">Cadastrar Aluno</Link>
-      </nav> */}
-
-      <Routes>
-        <Route path="/" element={<AlunoListPage />} />
-        <Route path="/novo" element={<AlunoFormPage />} />
-        <Route path="/editar/:id" element={<AlunoFormPage />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* <Route path="teste" element={<MensalidadesPage01/>} /> */}
+            <Route path={ROUTES.login} element={<Login />} />
+            <Route path={ROUTES.selfRegister} element={<SelfRegister />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path={ROUTES.dashboard} element={<DashboardPage />} />
+              <Route path={ROUTES.pessoas} element={<PessoasListPage />} />
+              <Route path={ROUTES.pessoaNovo} element={<PessoaFormPage />} />
+              <Route path={ROUTES.pessoaDetalhe.path} element={<PessoaFormPage />} />
+              <Route path={ROUTES.categorias} element={<CategoriasListPage />} />
+              <Route path={ROUTES.categoriaNovo} element={<CategoriaFormPage />} />
+              <Route path={ROUTES.categoriaDetalhe.path} element={<CategoriaFormPage />} />
+              <Route path={ROUTES.contasReceber} element={<ContasReceberListPage />} />
+              <Route path={ROUTES.contaReceberNovo} element={<ContaReceberFormPage />} />
+              <Route path={ROUTES.contaReceberDetalhe.path} element={<ContaReceberFormPage />} />
+              <Route path={ROUTES.registrarRecebimento.path} element={<RegistrarRecebimentoPage />} />
+              <Route path={ROUTES.estornarRecebimento.path} element={<EstornarRecebimentoPage />} />
+              <Route path={ROUTES.fichaFinanceira.path} element={<FichaFinanceiraPage />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
+      <ToastContainer position="top-right" autoClose={4000} />
     </ThemeProvider>
   );
 }
-
-// function App(): JSX.Element {
-//   // Estado do contador, inicializado em 0
-//   // const [contador, setContador] = useState<number>(0);
-
-//   const [refresh, setRefresh] = useState(false);  
-
-//   return (
-
-//     <div style={{ textAlign: "center", marginTop: "50px" }}>
-//       <h1>Olá, Edson Koguishi! 👋</h1>
-
-//       <Button variant="contained" color="primary" startIcon={<DeleteIcon />}>
-//         Botão com Ícone
-//       </Button>      
-
-//       {/* Chamando o componente Contador */}
-//       {/* <Contador inicial={0} /> */}
-
-//       <div style={{ padding: "20px" }}>
-//         <h1>Academia - Controle de Alunos</h1>
-//         <AlunoForm onAlunoCriado={() => setRefresh(!refresh)} />
-//         <hr />
-//         <AlunoList refreshKey={refresh} />
-//       </div>
-//     </div>
-//   );
-// }
 
 export default App;
