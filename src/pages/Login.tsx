@@ -38,6 +38,9 @@ export default function Login() {
             setError("Usuário ou senha inválidos");
         }
     };
+useEffect(() => {
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+}, []); 
 
 useEffect(() => {
   console.log("API URL:", import.meta.env.VITE_API_URL);
