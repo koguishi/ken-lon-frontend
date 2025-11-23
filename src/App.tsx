@@ -1,29 +1,32 @@
 import type { JSX } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
-import { AuthProvider } from "./auth/AuthContext";
-import { ROUTES } from "./Routes";
-import Login from "./pages/Login";
-import PrivateRoute from "./components/PrivateRoute";
-import DashboardPage from "./pages/DashboardPage";
-import SelfRegister from "./pages/SelfRegister";
-import theme from "./theme";
-import PessoasListPage from "./pages/PessoasListPage";
-import PessoaFormPage from "./pages/PessoaFormPage";
-import CategoriasListPage from "./pages/CategoriasListPage";
-import CategoriaFormPage from "./pages/CategoriaFormPage";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
+import { AuthProvider } from "./auth/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import CategoriaFormPage from "./pages/CategoriaFormPage";
+import CategoriasListPage from "./pages/CategoriasListPage";
 import ContaReceberFormPage from "./pages/ContaReceber/ContaReceberFormPage";
-import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
-// import MensalidadesPage01 from "./pages/MensalidadesPage01";
+import ContasReceberListPage from "./pages/ContaReceber/ContasReceberListPage";
 import EstornarRecebimentoPage from "./pages/ContaReceber/EstornarRecebimentoPage";
+import RegistrarRecebimentoPage from "./pages/ContaReceber/RegistrarRecebimentoPage";
+import DashboardPage from "./pages/DashboardPage";
 import FichaFinanceiraPage from "./pages/FichaFinanceiraPage";
+import Login from "./pages/Login";
+import PessoaFormPage from "./pages/PessoaFormPage";
+import PessoasListPage from "./pages/PessoasListPage";
+import SelfRegister from "./pages/SelfRegister";
+import { ROUTES } from "./Routes";
+
+import "react-toastify/dist/ReactToastify.css";
+
+// TODO: confiurar e implementar tema escuro futuramente
+// import { ThemeProvider } from "@mui/material";
+// import theme from "./theme";
+// import MensalidadesPage01 from "./pages/MensalidadesPage01";
 
 export function App(): JSX.Element {
   return (
-    <ThemeProvider theme={theme}>
+    <div>
       <AuthProvider>
         <Router>
           <Routes>
@@ -50,7 +53,7 @@ export function App(): JSX.Element {
         </Router>
       </AuthProvider>
       <ToastContainer position="top-right" autoClose={4000} />
-    </ThemeProvider>
+    </div>
   );
 }
 
