@@ -96,11 +96,13 @@ useEffect(() => {
                     >
                         Entrar
                     </Button>
+                    {/* TODO: avaliar necessidade de auto cadastro futuramente
                     <Grid container>
                         <Link component={RouterLink} to="/self-register" variant="body2">
                             {"Não tem conta? Cadastre-se"}
                         </Link>
                     </Grid>
+                    */}
                 </Box>
             </Box>
         </Container>
