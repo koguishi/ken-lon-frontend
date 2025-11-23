@@ -15,12 +15,11 @@ import {
   Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { AttachMoney, Category, Payment, RequestPage } from "@mui/icons-material";
+import { AttachMoney, Category, RequestPage } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
