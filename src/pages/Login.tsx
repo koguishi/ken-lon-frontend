@@ -1,18 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import {
     Avatar,
     Button,
     TextField,
-    Link,
     Box,
     Typography,
     Container,
     Alert,
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export default function Login() {
