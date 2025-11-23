@@ -38,11 +38,11 @@ export default function DashboardLayout({ children }: Props) {
     };
 
     const menuItems = [
-        { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+        // { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
         { text: "Pessoas", icon: <PeopleIcon />, path: "/pessoas" },
         { text: "Categorias", icon: <Category />, path: "/categorias" },
         { text: "Contas a Receber", icon: <AttachMoney />, path: "/contas-receber" },
-        { text: "Contas a Pagar", icon: <Payment />, path: "/contas-pagar" },
+        // { text: "Contas a Pagar", icon: <Payment />, path: "/contas-pagar" },
         { text: "Ficha Financeira", icon: <RequestPage />, path: "/ficha-financeira" },
     ];
 
