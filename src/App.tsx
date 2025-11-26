@@ -34,7 +34,7 @@ export function App(): JSX.Element {
             <Route path={ROUTES.login} element={<Login />} />
             <Route path={ROUTES.selfRegister} element={<SelfRegister />} />
             <Route element={<PrivateRoute />}>
-              <Route path="/" element={<DashboardPage />} />
+              <Route path="/" element={<FichaFinanceiraPage />} />
               <Route path={ROUTES.dashboard} element={<DashboardPage />} />
               <Route path={ROUTES.pessoas} element={<PessoasListPage />} />
               <Route path={ROUTES.pessoaNovo} element={<PessoaFormPage />} />

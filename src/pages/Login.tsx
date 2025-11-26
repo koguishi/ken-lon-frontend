@@ -31,7 +31,7 @@ export default function Login() {
                 password,
             });
             login(response.data.token);
-            navigate("/dashboard");
+            navigate("/");
         } catch (err: any) {
             setError("Usuário ou senha inválidos");
         }
