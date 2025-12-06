@@ -19,7 +19,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { AttachMoney, Category, RequestPage } from "@mui/icons-material";
+import { AttachMoney, Category, Password, RequestPage } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -38,6 +38,7 @@ export default function DashboardLayout({ children }: Props) {
 
     const menuItems = [
         // { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+        { text: "Troca de Senha", icon: <Password />, path: "/trocar-senha" },
         { text: "Pessoas", icon: <PeopleIcon />, path: "/pessoas" },
         { text: "Categorias", icon: <Category />, path: "/categorias" },
         { text: "Contas a Receber", icon: <AttachMoney />, path: "/contas-receber" },

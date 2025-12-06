@@ -30,6 +30,7 @@ export const ROUTES = {
         build: (pessoaId?: string) => `/ficha-financeira/${pessoaId}`
     },
     login: "/login",
+    trocarSenha: "/trocar-senha",
     selfRegister: "/self-register",
     dashboard: "/dashboard",
 };

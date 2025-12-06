@@ -33,7 +33,8 @@ export default function Login() {
             login(response.data.token);
             navigate("/");
         } catch (err: any) {
-            setError("Usuário ou senha inválidos");
+            setError(err.response?.data?.message || "Usuário ou senha inválidos");
+            // setError("Usuário ou senha inválidos");
         }
     };
 useEffect(() => {

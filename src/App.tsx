@@ -18,6 +18,7 @@ import SelfRegister from "./pages/SelfRegister";
 import { ROUTES } from "./Routes";
 
 import "react-toastify/dist/ReactToastify.css";
+import TrocaSenhaPage from "./pages/TrocaSenhaPage";
 
 // TODO: confiurar e implementar tema escuro futuramente
 // import { ThemeProvider } from "@mui/material";
@@ -35,6 +36,7 @@ export function App(): JSX.Element {
             <Route path={ROUTES.selfRegister} element={<SelfRegister />} />
             <Route element={<PrivateRoute />}>
               <Route path="/" element={<FichaFinanceiraPage />} />
+              <Route path={ROUTES.trocarSenha} element={<TrocaSenhaPage />} />
               <Route path={ROUTES.dashboard} element={<DashboardPage />} />
               <Route path={ROUTES.pessoas} element={<PessoasListPage />} />
               <Route path={ROUTES.pessoaNovo} element={<PessoaFormPage />} />
