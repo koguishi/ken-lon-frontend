@@ -53,7 +53,12 @@ export default function ContasReceberList() {
 
   useEffect(() => {
     fetchContasReceber();
-  }, [page, rowsPerPage, filtroStatus]);
+  }, [page]);
+
+  useEffect(() => {
+    fetchContasReceber();
+    setPage(0);
+  }, [filtroStatus]);
 
   const handleRecebimento = async (id: string, recebido?: boolean) => {
     recebido
@@ -67,9 +72,13 @@ export default function ContasReceberList() {
 
     try {
       await remove(id);
+      if ((total - 1) <= (page * rowsPerPage) && page > 0) {
+        setPage(page - 1);
+        // a lista é atualizada peloUseEffect ... [page]
+      } else {
+        fetchContasReceber();
+      }
       toast.success("Conta excluída com sucesso!");
-      // atualizar a lista
-      fetchContasReceber();
     } catch (err) {
       handleApiError(err, "excluir conta a receber");
     }
