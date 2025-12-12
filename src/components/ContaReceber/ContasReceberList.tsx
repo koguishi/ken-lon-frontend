@@ -169,7 +169,7 @@ export default function ContasReceberList() {
                 </TableCell>
                 <TableCell>
                   {conta.dataRecebimento 
-                    ? new Date(conta.dataRecebimento).toLocaleDateString()
+                    ? new Date(conta.dataRecebimento).toLocaleDateString("pt-BR")
                     : ""
                   }
                 </TableCell>
