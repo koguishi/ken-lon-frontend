@@ -249,13 +249,13 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
               >
                 {conta.descricao}
               </TableCell>
-              <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(conta.vencimento).toLocaleDateString("pt-BR")}</TableCell>
               <TableCell>
                 R$ {conta.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </TableCell>
               <TableCell>
                 {conta.dataRecebimento 
-                  ? new Date(conta.dataRecebimento).toLocaleDateString()
+                  ? new Date(conta.dataRecebimento).toLocaleDateString("pt-BR")
                   : ""
                 }
               </TableCell>
