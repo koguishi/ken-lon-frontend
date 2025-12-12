@@ -16,6 +16,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import DateInputMui from "./basic/DateInputMUI";
+import { primeiroDiaDoAno, ultimoDiaDoAno } from "../utils/date";
 
 interface Props {
     pessoaIdInicial: string | undefined;
@@ -27,8 +28,8 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
   const { handleApiError } = useApiError();
 
   const [filtroPessoaId, setFiltroPessoaId] = useState("");
-  const [filtroDe, setFiltroDe] = useState("");
-  const [filtroAte, setFiltroAte] = useState("");
+  const [filtroDe, setFiltroDe] = useState(primeiroDiaDoAno());
+  const [filtroAte, setFiltroAte] = useState(ultimoDiaDoAno());
   const { getByPessoaId, remove } = ContaReceberApi;
   const { PdfGen, PdfUrl } = FichaFinanceiraApi;  
   const [contas, setContas] = useState<ContaReceber[]>([]);  
@@ -192,12 +193,12 @@ export default function FichaFinanceira({ pessoaIdInicial }: Props) {
       >
         <DateInputMui
           label="De"
-          value=""
+          value={filtroDe}
           onChange={handleVencimentoDeChange}
         />
         <DateInputMui
           label="Até"
-          value=""
+          value={filtroAte}
           onChange={handleVencimentoAteChange}
         />
         <Button

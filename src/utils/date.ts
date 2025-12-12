@@ -32,3 +32,13 @@ export const formatDateToDDMMYYYY = (date: Date, separator: string = "/"): strin
     const day = String(date.getDate()).padStart(2, '0');
     return `${day}${separator}${month}${separator}${year}`;
 }
+
+export function primeiroDiaDoAno(): string {
+  const ano = new Date().getFullYear();
+  return `01/01/${ano}`;
+}
+
+export function ultimoDiaDoAno(): string {
+  const ano = new Date().getFullYear();
+  return `31/12/${ano}`;
+}
