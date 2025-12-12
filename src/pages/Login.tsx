@@ -10,6 +10,7 @@ import {
     Typography,
     Container,
     Alert,
+    CircularProgress,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
@@ -20,10 +21,12 @@ export default function Login() {
     const navigate = useNavigate();
     const apiUrl = import.meta.env.VITE_API_URL;
     const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             const response = await axios.post(`${apiUrl}/auth/login`, {
@@ -35,15 +38,18 @@ export default function Login() {
         } catch (err: any) {
             setError(err.response?.data?.message || "Usuário ou senha inválidos");
             // setError("Usuário ou senha inválidos");
-        }
+        } finally {
+            setLoading(false);
+        }        
     };
-useEffect(() => {
-  console.log("API URL:", import.meta.env.VITE_API_URL);
-}, []); 
 
-useEffect(() => {
-  console.log("API URL:", import.meta.env.VITE_API_URL);
-}, []);    
+    useEffect(() => {
+        console.log("API URL:", import.meta.env.VITE_API_URL);
+    }, []);
+
+    useEffect(() => {
+        console.log("API URL:", import.meta.env.VITE_API_URL);
+    }, []);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -92,8 +98,12 @@ useEffect(() => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={loading}
                     >
-                        Entrar
+                        { loading
+                            ? (<CircularProgress size={24} />)
+                            : ("Entrar")
+                        }
                     </Button>
                     {/* TODO: avaliar necessidade de auto cadastro futuramente
                     <Grid container>
