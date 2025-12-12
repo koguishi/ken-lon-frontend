@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from 'react';
+import React, { useEffect, useState, type ChangeEvent } from 'react';
 import { TextField } from '@mui/material';
 
 interface DateInputMuiProps {
@@ -55,6 +55,13 @@ const DateInputMui: React.FC<DateInputMuiProps> = ({
       onChange(null);
     }
   };
+
+  // para que handleInputChange seja executado na montagem quando inputValue já tem valor
+  useEffect(() => {
+    if (inputValue) {
+      handleInputChange({ target: { value: inputValue }} as any);
+    }
+  }, []);
 
   return (
     <TextField
