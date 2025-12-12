@@ -163,7 +163,7 @@ export default function ContasReceberList() {
                     {conta.descricao}
                   </TableCell>
                 </Tooltip>
-                <TableCell>{new Date(conta.vencimento).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(conta.vencimento).toLocaleDateString("pt-BR")}</TableCell>
                 <TableCell>
                   R$ {conta.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </TableCell>
