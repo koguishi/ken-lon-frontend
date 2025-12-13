@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function PessoaAutocomplete({ autoFocus, idInicial: pessoaIdInicial, onChange }: Props) {
-  const { getAll, getById } = PessoaApi;  
+  const { filtrar, getById } = PessoaApi;  
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<Pessoa[]>([]);
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,7 @@ export default function PessoaAutocomplete({ autoFocus, idInicial: pessoaIdInici
     const buscarPessoas = async () => {
       setLoading(true);
       try {
-        getAll(undefined, undefined, inputValue).then((res) => {
+        filtrar(inputValue).then((res) => {
           if (!cancel) setOptions(res.data.pessoas);
         });
       } catch (err) {
@@ -59,10 +59,14 @@ export default function PessoaAutocomplete({ autoFocus, idInicial: pessoaIdInici
       }
     };
 
-    buscarPessoas();
+    const timeout = setTimeout(() => {
+      // chamada da API
+      buscarPessoas();
+    }, 500); // delay em ms
 
     return () => {
       cancel = true;
+      clearTimeout(timeout);
     };
   }, [inputValue]);
 
@@ -73,6 +77,7 @@ export default function PessoaAutocomplete({ autoFocus, idInicial: pessoaIdInici
         setSelected(newValue);
         onChange?.(newValue);
       }}
+      inputValue={inputValue}
       onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
       options={options}
       getOptionLabel={(option) => option.nome}
