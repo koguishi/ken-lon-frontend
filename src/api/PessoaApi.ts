@@ -8,6 +8,9 @@ export const PessoaApi = {
             params: { page, pageSize, search }
         }
     ),
+    filtrar: (search: string) =>
+        api.get( `${url}/buscar/${search}`
+    ),
     getById: (id: string) => api.get(`${url}/${id}`),
     create: (data: any) => api.post(url, data),
     update: (id: string, data: any) => api.put(`${url}/${id}`, data),
